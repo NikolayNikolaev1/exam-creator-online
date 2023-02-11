@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExamCreatorOnline.Data.Models
+﻿namespace ExamCreatorOnline.Data.Models
 {
     public class Question
     {
@@ -13,5 +7,11 @@ namespace ExamCreatorOnline.Data.Models
         public string Text { get; set; }
 
         public int Points { get; set; }
+
+        public int ExamId { get; set; }
+
+        public Exam Exam { get; set; }
+
+        public IEnumerable<Answear> Answears { get; set; } = new List<Answear>();
     }
 }
