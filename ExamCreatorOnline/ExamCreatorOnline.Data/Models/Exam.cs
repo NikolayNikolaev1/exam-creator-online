@@ -15,6 +15,13 @@
         public int VeryGoodPoints { get; set; }
 
         public int ExcelentPoints { get; set; }
+
+        public int FacilityId { get; set; }
+
+        public Facility facility { get; set; }
+
         public IEnumerable<Question> Questions { get; set; } = new List<Question>();
+
+        public IEnumerable<StudentExam> Students { get; set; } = new List<StudentExam>();
     }
 }

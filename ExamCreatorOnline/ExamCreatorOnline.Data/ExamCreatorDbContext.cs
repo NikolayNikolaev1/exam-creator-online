@@ -5,6 +5,8 @@
 
     public class ExamCreatorDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+
         public DbSet<Exam> Exams { get; set; }
 
         public DbSet<Question> Questions { get; set; }
@@ -20,6 +22,31 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder
+                .Entity<StudentExam>()
+                .HasKey(ue => new { ue.StudentId, ue.ExamId });
+
+            builder
+                .Entity<StudentExam>()
+                .HasOne(s => s.Exam)
+                .WithMany(e => e.Students)
+                .HasForeignKey(s => s.ExamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<StudentExam>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.Exams)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<StudentExam>()
+                .HasOne(e => e.Teacher)
+                .WithMany(t => t.ExamsLeading)
+                .HasForeignKey(e => e.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder
                 .Entity<Question>()
                 .HasOne(q => q.Exam)
