@@ -18,7 +18,7 @@
 
         public int FacilityId { get; set; }
 
-        public Facility facility { get; set; }
+        public Facility Facility { get; set; }
 
         public IEnumerable<Question> Questions { get; set; } = new List<Question>();
 

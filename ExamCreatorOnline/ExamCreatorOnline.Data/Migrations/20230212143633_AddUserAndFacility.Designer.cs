@@ -6,11 +6,14 @@ namespace ExamCreatorOnline.Data.Migrations
     using ExamCreatorOnline.Data;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(ExamCreatorDbContext))]
-    partial class ExamCreatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230212143633_AddUserAndFacility")]
+    partial class AddUserAndFacility
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
