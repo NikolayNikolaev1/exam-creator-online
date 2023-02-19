@@ -13,5 +13,7 @@
         public Exam Exam { get; set; }
 
         public IEnumerable<Answear> Answears { get; set; } = new List<Answear>();
+
+        public IEnumerable<Mark> Marks { get; set; } = new List<Mark>();
     }
 }

@@ -6,7 +6,12 @@
 
     public class ExamCreatorDbContext : DbContext
     {
+        public ExamCreatorDbContext(DbContextOptions<ExamCreatorDbContext> options)
+            : base(options) { }
+
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
 
         public DbSet<Facility> Facility { get; set; }
 
@@ -24,6 +29,13 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder
+                .Entity<User>()
+                .HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
             // Using reflection for property relations configuration.
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

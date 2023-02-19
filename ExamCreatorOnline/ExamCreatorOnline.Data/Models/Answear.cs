@@ -11,5 +11,7 @@
         public int QuestionId { get; set; }
 
         public Question Question { get; set; }
+
+        public IEnumerable<Mark> Marks { get; set; } = new List<Mark>();
     }
 }
