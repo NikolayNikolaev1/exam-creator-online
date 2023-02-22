@@ -9,9 +9,5 @@
         public int ExamId { get; set; }
 
         public Exam Exam { get; set; }
-
-        public int TeacherId { get; set; }
-
-        public User Teacher { get; set; }
     }
 }

@@ -21,8 +21,8 @@
         public Facility Facility { get; set; }
         // Collection for student-exam relation.
         public IEnumerable<StudentExam> Exams { get; set; } = new List<StudentExam>();
-        // Collection for teacher-exam relation.
-        public IEnumerable<StudentExam> Examinings { get; set; } = new List<StudentExam>();
+        // Collection for lecturer-exam relation.
+        public IEnumerable<Exam> Examinings { get; set; } = new List<Exam>();
 
         public IEnumerable<StudentMark> Marks { get; set; } = new List<StudentMark>();
     }
