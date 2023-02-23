@@ -6,7 +6,7 @@
 
         public string Name { get; set; }
 
-        public DateTime Time { get; set; }
+        public bool IsOpen { get; set; } 
 
         public int AveragePoints { get; set; }
 
@@ -15,6 +15,10 @@
         public int VeryGoodPoints { get; set; }
 
         public int ExcelentPoints { get; set; }
+
+        public int LecturerId { get; set; }
+
+        public User Lecturer { get; set; }
 
         public int FacilityId { get; set; }
 

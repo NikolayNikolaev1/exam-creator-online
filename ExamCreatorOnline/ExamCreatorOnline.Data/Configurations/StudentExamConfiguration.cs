@@ -22,12 +22,6 @@
                 .WithMany(s => s.Exams)
                 .HasForeignKey(e => e.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            studentExam
-                .HasOne(e => e.Teacher)
-                .WithMany(t => t.Examinings)
-                .HasForeignKey(e => e.TeacherId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
