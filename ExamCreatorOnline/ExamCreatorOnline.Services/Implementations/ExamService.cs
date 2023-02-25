@@ -2,6 +2,7 @@
 {
     using Data;
     using Data.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class ExamService : IExamService
     {
@@ -12,14 +13,29 @@
             this.dbContext = dbContext;
         }
 
-        public Task AddQuestionsAsync(int examId, IEnumerable<int> questionids)
+        public async Task AddQuestionsAsync(int examId, IEnumerable<int> questionIds)
         {
-            throw new NotImplementedException();
+            Exam exam = this.dbContext.Exams.First(e => e.Id == examId);
+            IEnumerable<Question> questions = this.dbContext
+                .Questions
+                .Where(eq => questionIds.Any(q => q == eq.Id));
+            exam.Questions.ToList().AddRange(questions);
+
+            await this.dbContext.SaveChangesAsync();
         }
 
-        public Task AddStudentsAsync(int examId, IEnumerable<int> studentIds)
+        public async Task AddStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
-            throw new NotImplementedException();
+            Exam exam = this.dbContext.Exams.First(e => e.Id == examId);
+            IEnumerable<User> students = this.dbContext
+                .Users
+                .Where(u => studentIds.Any(s => s == u.Id));
+            students.ToList().ForEach(delegate (User s)
+            {
+                exam.Students.ToList().Add(new StudentExam { ExamId = examId, StudentId = s.Id });
+            });
+
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task<int> CreateAsync(
@@ -28,34 +44,53 @@
             int goodPts,
             int veryGoodPts,
             int excelentPts,
-            int facultyId)
+            int facultyId,
+            int lecturerId)
         {
             Exam exam = new Exam
             {
                 Name = name,
+                IsOpen = false,
                 AveragePoints = avgPts,
                 GoodPoints = goodPts,
                 VeryGoodPoints = veryGoodPts,
                 ExcelentPoints = excelentPts,
-                FacilityId = facultyId
+                FacilityId = facultyId,
+                LecturerId = lecturerId
             };
 
             await this.dbContext.AddAsync(exam);
+            await this.dbContext.SaveChangesAsync();
+
+            return exam.Id;
         }
 
-        public Task<bool> ExistsAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> ExistsAsync(string name)
+            => await this.dbContext.Exams.AnyAsync(e => e.Name == name);
 
         public Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)
+        // TODO: exam-question ondelete.cascade
+        //public Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds)
+        //{
+        //    Exam exam = this.dbContext.Exams.First(e => e.Id == examId);
+        //    exam.Questions.
+        //}
+
+        public async Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
-            throw new NotImplementedException();
+            foreach (StudentExam se in this.dbContext.StudentsExams)
+            {
+                if (se.ExamId == examId && studentIds.Contains(se.StudentId))
+                {
+                    this.dbContext.StudentsExams.Remove(se);
+                }
+            }
+
+            await this.dbContext.SaveChangesAsync();
         }
     }
 }

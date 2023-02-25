@@ -4,9 +4,16 @@
     {
         Task AddStudentsAsync(int examId, IEnumerable<int> studentIds);
 
-        Task AddQuestionsAsync(int examId, IEnumerable<int> questionids);
+        Task AddQuestionsAsync(int examId, IEnumerable<int> questionIds);
 
-        Task<int> CreateAsync(string name, int avgPts, int goodPts, int veryGoodPts, int excelentPts, int facId);
+        Task<int> CreateAsync(
+            string name,
+            int avgPts,
+            int goodPts,
+            int veryGoodPts,
+            int excelentPts,
+            int facId,
+            int lecturerId);
 
         Task<bool> ExistsAsync(string name);
 
