@@ -5,11 +5,14 @@ namespace ExamCreatorOnline.Data.Migrations
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(ExamCreatorDbContext))]
-    partial class ExamCreatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230226132601_UpdateUserFacilityRelation")]
+    partial class UpdateUserFacilityRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,6 +153,23 @@ namespace ExamCreatorOnline.Data.Migrations
                     b.ToTable("Questions");
                 });
 
+            modelBuilder.Entity("ExamCreatorOnline.Data.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("ExamCreatorOnline.Data.Models.StudentExam", b =>
                 {
                     b.Property<int>("StudentId")
@@ -199,12 +219,14 @@ namespace ExamCreatorOnline.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FacilityId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -315,7 +337,15 @@ namespace ExamCreatorOnline.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ExamCreatorOnline.Data.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Facility");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("ExamCreatorOnline.Data.Models.Answear", b =>
@@ -347,6 +377,11 @@ namespace ExamCreatorOnline.Data.Migrations
                     b.Navigation("Answears");
 
                     b.Navigation("Marks");
+                });
+
+            modelBuilder.Entity("ExamCreatorOnline.Data.Models.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("ExamCreatorOnline.Data.Models.User", b =>

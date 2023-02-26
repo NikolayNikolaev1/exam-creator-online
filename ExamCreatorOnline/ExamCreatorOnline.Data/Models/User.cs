@@ -8,15 +8,9 @@
 
         public string Password { get; set; }
 
-        public int RoleId { get; set; }
-
         public Role Role { get; set; }
-        // StudentSystem is the foreign key for the student-facility relation.
-        public int? StudentSystemId { get; set; }
 
-        public Facility StudentSystem { get; set; }
-        // Foreign key for teacher-facility relation.
-        public int? FacilityId { get; set; }
+        public int FacilityId { get; set; }
 
         public Facility Facility { get; set; }
         // Collection for student-exam relation.
@@ -25,5 +19,13 @@
         public IEnumerable<Exam> Examinings { get; set; } = new List<Exam>();
 
         public IEnumerable<StudentMark> Marks { get; set; } = new List<StudentMark>();
+    }
+
+    public enum Role
+    {
+        Admin = 0,
+        Owner = 1,
+        Lecturer = 2,
+        Student = 3
     }
 }

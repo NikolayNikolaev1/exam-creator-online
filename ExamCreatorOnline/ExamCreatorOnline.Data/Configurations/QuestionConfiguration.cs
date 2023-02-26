@@ -12,13 +12,13 @@
                 .HasOne(q => q.Exam)
                 .WithMany(e => e.Questions)
                 .HasForeignKey(q => q.ExamId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             question
                 .HasMany(q => q.Answears)
                 .WithOne(a => a.Question)
                 .HasForeignKey(a => a.QuestionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

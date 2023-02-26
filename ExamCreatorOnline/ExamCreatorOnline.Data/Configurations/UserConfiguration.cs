@@ -9,9 +9,9 @@
         public void Configure(EntityTypeBuilder<User> user)
         {
             user
-                .HasOne(u => u.Role)
-                .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RoleId)
+                .HasOne(u => u.Facility)
+                .WithMany(f => f.Members)
+                .HasForeignKey(u => u.FacilityId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             user

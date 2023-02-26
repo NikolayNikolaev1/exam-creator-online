@@ -15,31 +15,24 @@
 
         public async Task CreateSystemOwnerAsync(string email, string password, string facilityName)
         {
-            User owner = new User
-            {
-                Email = email,
-                Password = password,
-                RoleId = 1
-            };
 
             Facility facility = new Facility
             {
                 Name = facilityName
             };
 
-
-            await this.dbContext.AddAsync(owner);
             await this.dbContext.AddAsync(facility);
             await this.dbContext.SaveChangesAsync();
 
-            this.dbContext.Entry(owner).GetDatabaseValues();
-            this.dbContext.Entry(facility).GetDatabaseValues();
+            User owner = new User
+            {
+                Email = email,
+                Password = password,
+                FacilityId = facility.Id,
+                Role = Role.Owner
+            };
 
-            int ownerId = owner.Id;
-            int facilityId = facility.Id;
-
-            this.dbContext.Users.Where(u => u.Email == owner.Email).First().FacilityId = facilityId;
-            this.dbContext.Facility.Where(f => facility.Name == facility.Name).First().OwnerId = owner.Id;
+            await this.dbContext.AddAsync(owner);
             await this.dbContext.SaveChangesAsync();
         }
 
@@ -49,7 +42,7 @@
             {
                 Email = email,
                 Password = password,
-                RoleId = roleId,
+                Role = (Role)roleId,
                 FacilityId = facilityId
             };
 

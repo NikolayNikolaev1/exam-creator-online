@@ -5,11 +5,14 @@ namespace ExamCreatorOnline.Data.Migrations
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
     [DbContext(typeof(ExamCreatorDbContext))]
-    partial class ExamCreatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230226133714_RemoveRoleEntity")]
+    partial class RemoveRoleEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
