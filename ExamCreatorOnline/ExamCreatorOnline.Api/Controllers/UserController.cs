@@ -1,8 +1,8 @@
 ﻿namespace ExamCreatorOnline.Api.Controllers
 {
     using Data.Models;
-    using ExamCreatorOnline.Api.Models;
     using Microsoft.AspNetCore.Mvc;
+    using Models;
     using Services;
 
     [Route("api/[controller]")]
@@ -17,7 +17,7 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Create([FromBody]SystemUserDTO userDTO)
+        public async Task<ActionResult> Create([FromBody]SystemUserDTO userDTO)
         {
             if (userDTO == null)
             {

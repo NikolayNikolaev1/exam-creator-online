@@ -38,6 +38,9 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task<ICollection<Exam>> AllAsync()
+            => await this.dbContext.Exams.ToListAsync();
+
         public async Task<int> CreateAsync(
             string name,
             int avgPts,
@@ -65,8 +68,22 @@
             return exam.Id;
         }
 
-        public async Task<bool> ExistsAsync(string name)
+        public async Task DeleteAsync(int id)
+        {
+            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == id);
+
+            this.dbContext.Remove(exam);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsIdAsync(int id)
+            => await this.dbContext.Exams.AnyAsync(e => e.Id == id);
+
+        public async Task<bool> ExistsNameAsync(string name)
             => await this.dbContext.Exams.AnyAsync(e => e.Name == name);
+
+        public async Task<Exam> FindIdAsync(int id)
+            => await this.dbContext.Exams.FirstAsync(e => e.Id == id);
 
         public Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds)
         {
@@ -89,6 +106,25 @@
                     this.dbContext.StudentsExams.Remove(se);
                 }
             }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(
+            int id,
+            string name,
+            int avgPts,
+            int goodPts,
+            int veryGoodPts,
+            int excelentPts)
+        {
+            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == id);
+
+            exam.Name = name;
+            exam.AveragePoints = avgPts;
+            exam.GoodPoints = goodPts;
+            exam.VeryGoodPoints = veryGoodPts;
+            exam.ExcelentPoints = excelentPts;
 
             await this.dbContext.SaveChangesAsync();
         }
