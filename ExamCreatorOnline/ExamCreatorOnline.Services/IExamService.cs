@@ -1,6 +1,6 @@
 ﻿namespace ExamCreatorOnline.Services
 {
-    using Data.Models;
+    using DTO.Exams;
 
     public interface IExamService
     {
@@ -8,35 +8,22 @@
 
         Task AddQuestionsAsync(int examId, IEnumerable<int> questionIds);
 
-        Task<ICollection<Exam>> AllAsync();
+        Task<IEnumerable<ExamDTO>> AllAsync();
 
-        Task<int> CreateAsync(
-            string name,
-            int avgPts,
-            int goodPts,
-            int veryGoodPts,
-            int excelentPts,
-            int facId,
-            int lecturerId);
+        Task<int> CreateAsync(ExamCreatingDTO examDTO);
 
         Task DeleteAsync(int id);
 
         Task<bool> ExistsIdAsync(int id);
 
-        Task<bool> ExistsNameAsync(string name);
+        Task<bool> ExistsNameAsync(int facilityId, string name);
 
-        Task<Exam> FindIdAsync(int id);
+        Task<ExamDTO> FindIdAsync(int id);
 
         Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
 
         Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds);
 
-        Task UpdateAsync(
-            int examId,
-            string name,
-            int avgPts,
-            int goodPts,
-            int veryGoodPts,
-            int excelentPts);
+        Task UpdateAsync(int id, ExamUpdatingDTO examDTO);
     }
 }

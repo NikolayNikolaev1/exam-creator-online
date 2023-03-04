@@ -1,11 +1,11 @@
-﻿namespace ExamCreatorOnline.Api.Models
+﻿namespace ExamCreatorOnline.Services.DTO.Exams
 {
+    using Core.Mapping;
+    using Data.Models;
     using System.ComponentModel.DataAnnotations;
 
-    public class ExamDTO
+    public class ExamCreatingDTO : IMapFrom<Exam>
     {
-        public int Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 
@@ -23,7 +23,7 @@
 
         [Required]
         [Range(1, Double.MaxValue)]
-        public int ExcellentPoints { get; set; }
+        public int ExcelentPoints { get; set; }
 
         [Required]
         public int FacilityId { get; set; }

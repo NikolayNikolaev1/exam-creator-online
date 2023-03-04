@@ -1,21 +1,26 @@
 ﻿namespace ExamCreatorOnline.Services.Implementations
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
+    using DTO.Exams;
     using Microsoft.EntityFrameworkCore;
 
     public class ExamService : IExamService
     {
-        private ExamCreatorDbContext dbContext;
+        private readonly ExamCreatorDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public ExamService(ExamCreatorDbContext dbContext)
+        public ExamService(ExamCreatorDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task AddQuestionsAsync(int examId, IEnumerable<int> questionIds)
         {
-            Exam exam = this.dbContext.Exams.First(e => e.Id == examId);
+            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
             IEnumerable<Question> questions = this.dbContext
                 .Questions
                 .Where(eq => questionIds.Any(q => q == eq.Id));
@@ -26,7 +31,7 @@
 
         public async Task AddStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
-            Exam exam = this.dbContext.Exams.First(e => e.Id == examId);
+            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
             IEnumerable<User> students = this.dbContext
                 .Users
                 .Where(u => studentIds.Any(s => s == u.Id));
@@ -38,28 +43,24 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<ICollection<Exam>> AllAsync()
-            => await this.dbContext.Exams.ToListAsync();
+        public async Task<IEnumerable<ExamDTO>> AllAsync()
+            => await this.dbContext
+            .Exams
+            .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)
+            .ToListAsync();
 
-        public async Task<int> CreateAsync(
-            string name,
-            int avgPts,
-            int goodPts,
-            int veryGoodPts,
-            int excelentPts,
-            int facultyId,
-            int lecturerId)
+        public async Task<int> CreateAsync(ExamCreatingDTO examDTO)
         {
             Exam exam = new Exam
             {
-                Name = name,
+                Name = examDTO.Name,
                 IsOpen = false,
-                AveragePoints = avgPts,
-                GoodPoints = goodPts,
-                VeryGoodPoints = veryGoodPts,
-                ExcelentPoints = excelentPts,
-                FacilityId = facultyId,
-                LecturerId = lecturerId
+                AveragePoints = examDTO.AveragePoints,
+                GoodPoints = examDTO.GoodPoints,
+                VeryGoodPoints = examDTO.VeryGoodPoints,
+                ExcelentPoints = examDTO.ExcelentPoints,
+                FacilityId = examDTO.FacilityId,
+                LecturerId = examDTO.LecturerId
             };
 
             await this.dbContext.AddAsync(exam);
@@ -79,11 +80,16 @@
         public async Task<bool> ExistsIdAsync(int id)
             => await this.dbContext.Exams.AnyAsync(e => e.Id == id);
 
-        public async Task<bool> ExistsNameAsync(string name)
-            => await this.dbContext.Exams.AnyAsync(e => e.Name == name);
+        public async Task<bool> ExistsNameAsync(int facilityId, string name)
+            => await this.dbContext
+            .Facility
+            .AnyAsync(f => f.Id == facilityId && f.Exams.Any(e => e.Name == name));
 
-        public async Task<Exam> FindIdAsync(int id)
-            => await this.dbContext.Exams.FirstAsync(e => e.Id == id);
+        public async Task<ExamDTO> FindIdAsync(int id)
+            => await this.dbContext
+            .Exams
+            .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)
+            .FirstAsync(e => e.Id == id);
 
         public Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds)
         {
@@ -110,21 +116,15 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(
-            int id,
-            string name,
-            int avgPts,
-            int goodPts,
-            int veryGoodPts,
-            int excelentPts)
+        public async Task UpdateAsync(int id, ExamUpdatingDTO examDTO)
         {
             Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == id);
 
-            exam.Name = name;
-            exam.AveragePoints = avgPts;
-            exam.GoodPoints = goodPts;
-            exam.VeryGoodPoints = veryGoodPts;
-            exam.ExcelentPoints = excelentPts;
+            exam.Name = examDTO.Name;
+            exam.AveragePoints = examDTO.AveragePoints;
+            exam.GoodPoints = examDTO.GoodPoints;
+            exam.VeryGoodPoints = examDTO.VeryGoodPoints;
+            exam.ExcelentPoints = examDTO.ExcellentPoints;
 
             await this.dbContext.SaveChangesAsync();
         }

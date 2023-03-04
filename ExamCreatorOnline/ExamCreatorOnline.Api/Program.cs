@@ -1,3 +1,4 @@
+using ExamCreatorOnline.Core.Mapping;
 using ExamCreatorOnline.Data;
 using ExamCreatorOnline.Services;
 using ExamCreatorOnline.Services.Implementations;
@@ -14,6 +15,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IExamService, ExamService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IAnswearService, AnswearService>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 var app = builder.Build();
 

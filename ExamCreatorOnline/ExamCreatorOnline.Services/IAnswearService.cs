@@ -1,9 +1,17 @@
 ﻿namespace ExamCreatorOnline.Services
 {
+    using DTO.Answears;
+
     public interface IAnswearService
     {
-        Task CreateAsync(string text, bool isCorrect, int questionId);
+        Task CreateAsync(AnswearCreatingDTO answearDTO);
 
-        Task UpdateAsync(int id, string text, bool isCorrect);
+        Task<bool> ExistsIdAsync(int id);
+
+        Task<bool> ExistsTextAsync(int questionId, string text);
+
+        Task<AnswearDTO> FindIdAsync(int id);
+
+        Task UpdateAsync(int id, AnswearUpdatingDTO answearDTO);
     }
 }
