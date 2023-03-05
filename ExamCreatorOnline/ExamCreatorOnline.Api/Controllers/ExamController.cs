@@ -1,16 +1,18 @@
 ﻿namespace ExamCreatorOnline.Api.Controllers
 {
+    using Data.Models;
     using Microsoft.AspNetCore.Mvc;
     using Services;
     using Services.DTO.Exams;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ExamController : ControllerBase
+    public class ExamController : BaseController
     {
-        private IExamService examService;
+        private readonly IExamService examService;
 
-        public ExamController(IExamService examService)
+        public ExamController(IExamService examService, IUserService userService)
+            : base(userService)
         {
             this.examService = examService;
         }
@@ -18,11 +20,17 @@
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Create([FromBody] ExamCreatingDTO examDTO)
         {
             if (examDTO == null)
             {
-                return BadRequest();
+                return BadRequest(examDTO);
+            }
+
+            if (!await base.IsUserAuthorizedAsync(examDTO.LecturerId, Role.Lecturer))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
 
             if (await this.examService.ExistsNameAsync(examDTO.FacilityId, examDTO.Name))
@@ -47,7 +55,7 @@
                 return NotFound();
             }
 
-            return Ok(await this.examService.FindIdAsync(id));
+            return Ok(await this.examService.FindByIdAsync(id));
         }
 
         [HttpGet()]
@@ -60,19 +68,25 @@
         [HttpPut("id:int")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Update(int id, [FromBody] ExamUpdatingDTO examDTO)
         {
             if (!await this.examService.ExistsIdAsync(id))
             {
-                return NotFound();
+                return NotFound(id);
             }
 
-            ExamDTO exam = await this.examService.FindIdAsync(id);
+            ExamDTO exam = await this.examService.FindByIdAsync(id);
+
+            if (!await base.IsUserAuthorizedAsync(examDTO.UserId, Role.Lecturer, id))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
 
             if (examDTO == null)
             {
-                return BadRequest();
+                return BadRequest(examDTO);
             }
 
             if (await this.examService.ExistsNameAsync(exam.Facility.Id, examDTO.Name))
@@ -88,12 +102,13 @@
 
         [HttpDelete("id:int")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await this.examService.ExistsIdAsync(id))
             {
-                return NotFound();
+                return NotFound(id);
             }
 
             await this.examService.DeleteAsync(id);

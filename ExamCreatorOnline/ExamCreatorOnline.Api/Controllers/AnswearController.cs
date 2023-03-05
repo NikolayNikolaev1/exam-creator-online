@@ -5,7 +5,7 @@
     using Services.DTO.Answears;
 
     [Route("api/[controller]")]
-    public class AnswearController : Controller
+    public class AnswearController : ControllerBase
     {
         private readonly IAnswearService answearService;
 
@@ -21,7 +21,7 @@
         {
             if (answearDTO == null)
             {
-                return BadRequest();
+                return BadRequest(answearDTO);
             }
 
             if (await this.answearService.ExistsTextAsync(answearDTO.QuestionId, answearDTO.Text))
@@ -43,14 +43,14 @@
         {
             if (!await this.answearService.ExistsIdAsync(id))
             {
-                return NotFound();
+                return NotFound(id);
             }
 
-            AnswearDTO answear = await this.answearService.FindIdAsync(id);
+            AnswearDTO answear = await this.answearService.FindByIdAsync(id);
 
             if (answearDTO == null)
             {
-                return BadRequest();
+                return BadRequest(answearDTO);
             }
 
             if (await this.answearService.ExistsTextAsync(answear.QuestionId, answearDTO.Text))

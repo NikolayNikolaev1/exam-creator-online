@@ -39,7 +39,7 @@
             .Questions
             .AnyAsync(q => q.Id == questionId && q.Answears.Any(a => a.Text == text));
 
-        public async Task<AnswearDTO> FindIdAsync(int id)
+        public async Task<AnswearDTO> FindByIdAsync(int id)
             => await this.dbContext
             .Answears
             .ProjectTo<AnswearDTO>(this.mapper.ConfigurationProvider)

@@ -1,16 +1,21 @@
 ﻿namespace ExamCreatorOnline.Services.Implementations
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
+    using DTO.Users;
     using Microsoft.EntityFrameworkCore;
 
     public class UserService : IUserService
     {
-        private ExamCreatorDbContext dbContext;
+        private readonly ExamCreatorDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public UserService(ExamCreatorDbContext dbContext)
+        public UserService(ExamCreatorDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task CreateSystemOwnerAsync(string email, string password, string facilityName)
@@ -36,23 +41,51 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task CreateUserAsync(string email, string password, int roleId, int facilityId)
+        public async Task<int> CreateUserAsync(UserRegisteringDTO userDTO)
         {
             User user = new User
             {
-                Email = email,
-                Password = password,
-                Role = (Role)roleId,
-                FacilityId = facilityId
+                Email = userDTO.Email,
+                Password = userDTO.Password,
+                Role = (Role)userDTO.RoleId,
+                FacilityId = userDTO.FacilityId
             };
 
             await this.dbContext.AddAsync(user);
             await this.dbContext.SaveChangesAsync();
+
+            return user.Id;
         }
 
-        public async Task<bool> UserExistsAsync(string email)
+        public async Task<bool> ExistsEmailAsync(string email)
             => await this.dbContext
             .Users
             .AnyAsync(u => u.Email == email);
+
+        public async Task<bool> ExistsIdAsync(int id)
+            => await this.dbContext.Users.AnyAsync(u => u.Id == id);
+
+        public async Task<UserDTO> FindByIdAsync(int id)
+            => await this.dbContext
+            .Users
+            .ProjectTo<UserDTO>(this.mapper.ConfigurationProvider)
+            .FirstAsync(u => u.Id == id);
+
+        public async Task<Role> FindRoleAsync(int userId)
+        {
+            User user = await this.dbContext.Users.FirstAsync(u => u.Id == userId);
+
+            return user.Role;
+        }
+
+        public async Task<bool> HasCorrectCredentialsAsync(UserLogingDTO userDTO)
+            => await this.dbContext
+            .Users
+            .AnyAsync(u => u.Email == userDTO.Email && u.Password == userDTO.Password);
+
+        public async Task<bool> HasExamIdAsync(int userId, int examId)
+            => await this.dbContext
+            .Users
+            .AnyAsync(u => u.Id == userId && u.Examinings.Any(e => e.Id == examId));
     }
 }

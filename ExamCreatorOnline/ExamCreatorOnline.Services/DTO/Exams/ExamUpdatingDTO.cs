@@ -24,5 +24,8 @@
         [Required]
         [Range(1, Double.MaxValue)]
         public int ExcellentPoints { get; set; }
+
+        [Required]
+        public int UserId { get; set; }
     }
 }

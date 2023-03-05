@@ -6,11 +6,12 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    public class QuestionController : ControllerBase
+    public class QuestionController : BaseController
     {
         private IQuestionService questionService;
 
-        public QuestionController(IQuestionService questionService)
+        public QuestionController(IQuestionService questionService, IUserService userService)
+            : base(userService)
         {
             this.questionService = questionService;
         }
@@ -18,11 +19,12 @@
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Create([FromBody] QuestionCreatingDTO questionDTO)
         {
             if (questionDTO == null)
             {
-                return BadRequest();
+                return BadRequest(questionDTO);
             }
 
             if (await this.questionService.ExistsTextAsync(questionDTO.ExamId, questionDTO.Text))
@@ -44,10 +46,10 @@
 
             if (!await this.questionService.ExistsIdAsync(id))
             {
-                return NotFound();
+                return NotFound(id);
             }
 
-            return Ok(await this.questionService.FindIdAsync(id));
+            return Ok(await this.questionService.FindByIdAsync(id));
         }
 
         [HttpPut("id:int")]
@@ -58,14 +60,14 @@
         {
             if (!await this.questionService.ExistsIdAsync(id))
             {
-                return NotFound();
+                return NotFound(id);
             }
 
-            QuestionDTO question = await this.questionService.FindIdAsync(id);
+            QuestionDTO question = await this.questionService.FindByIdAsync(id);
 
             if (questionDTO == null)
             {
-                return BadRequest();
+                return BadRequest(questionDTO);
             }
 
             if (await this.questionService.ExistsTextAsync(question.ExamId, questionDTO.Text))
@@ -86,7 +88,7 @@
         {
             if (!await this.questionService.ExistsIdAsync(id))
             {
-                return NotFound();
+                return NotFound(id);
             }
 
             await this.questionService.DeleteAsync(id);

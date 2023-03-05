@@ -85,7 +85,7 @@
             .Facility
             .AnyAsync(f => f.Id == facilityId && f.Exams.Any(e => e.Name == name));
 
-        public async Task<ExamDTO> FindIdAsync(int id)
+        public async Task<ExamDTO> FindByIdAsync(int id)
             => await this.dbContext
             .Exams
             .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)

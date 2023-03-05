@@ -10,7 +10,7 @@
 
         Task<bool> ExistsTextAsync(int examId, string text);
 
-        Task<QuestionDTO> FindIdAsync(int id);
+        Task<QuestionDTO> FindByIdAsync(int id);
 
         Task DeleteAsync(int id);
 

@@ -18,7 +18,7 @@
 
         Task<bool> ExistsNameAsync(int facilityId, string name);
 
-        Task<ExamDTO> FindIdAsync(int id);
+        Task<ExamDTO> FindByIdAsync(int id);
 
         Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
 
