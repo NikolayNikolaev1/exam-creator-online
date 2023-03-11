@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ExamCreatorDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnectionString")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IExamService, ExamService>();
@@ -28,6 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"));
 
 app.UseHttpsRedirection();
 

@@ -62,7 +62,7 @@
             {
                 return BadRequest(userDTO);
             }
-            if (!IsUserAuthorized(userDTO.CreatorId, Role.Owner))
+            if (!await IsUserAuthorized(userDTO.CreatorId, Role.Owner))
             {
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
