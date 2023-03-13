@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const useAnswearCreate = (defaultText, defaultIsCorrect) => {
+const useAnswearCreate = (
+  clientId,
+  defaultText,
+  defaultIsCorrect,
+  handleAnswearOnChange
+) => {
   const [text, setText] = useState(defaultText);
   const [isCorrect, setIsCorrect] = useState(defaultIsCorrect);
   const [errors, setErrors] = useState({
@@ -27,6 +32,10 @@ const useAnswearCreate = (defaultText, defaultIsCorrect) => {
   const handleIsCorrectChange = () => {
     setIsCorrect((oldState) => !oldState);
   };
+
+  useEffect(() => {
+    handleAnswearOnChange({ id: clientId, text, isCorrect });
+  }, [text, isCorrect]);
 
   return { text, handleTextChange, isCorrect, handleIsCorrectChange, errors };
 };

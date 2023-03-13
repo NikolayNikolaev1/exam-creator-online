@@ -4,22 +4,15 @@
     using Data.Models;
     using System.ComponentModel.DataAnnotations;
 
-    public class UserRegisteringDTO : IMapFrom<User>
+    public class UserOwnerRegisteringDTO : IMapFrom<User>
     {
         [Required]
-        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
         public string Password { get; set; }
 
         [Required]
-        public int RoleId { get; set; }
-
-        [Required]
-        public int FacilityId { get; set; }
-
-        [Required]
-        public int CreatorId { get; set; }
+        public string FacilityName { get; set; }
     }
 }

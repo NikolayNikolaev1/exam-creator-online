@@ -7,7 +7,11 @@
     public class ExamCreatingDTO : IMapFrom<Exam>
     {
         [Required]
+        //[Range(3, 15)]
         public string Name { get; set; }
+
+        //[Range(1, 50)]
+        public string Description { get; set; }
 
         [Required]
         [Range(1, Double.MaxValue)]

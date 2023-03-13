@@ -1,5 +1,5 @@
-import { FormControl, FormHelperText, TextField } from "@mui/material";
-import useExamCreate from "./useExamCreate";
+import { Button, FormControl, FormHelperText, TextField } from "@mui/material";
+import useExamForm from "../useExamForm";
 
 const ExamCreate = () => {
   const {
@@ -10,7 +10,8 @@ const ExamCreate = () => {
     points,
     handlePointsChange,
     errors,
-  } = useExamCreate();
+    handleAddOnClick,
+  } = useExamForm();
 
   return (
     <FormControl
@@ -79,6 +80,12 @@ const ExamCreate = () => {
       {errors.excelentPoints && (
         <FormHelperText error>{errors.excelentPoints}</FormHelperText>
       )}
+      <Button
+        disabled={Object.values(errors).filter((e) => e !== "").length > 0}
+        onClick={handleAddOnClick}
+      >
+        Add
+      </Button>
     </FormControl>
   );
 };

@@ -7,9 +7,14 @@ import {
 } from "@mui/material";
 import useAnswearCreate from "./useAnswearCreate";
 
-const AnswearCreate = (props) => {
+const AnswearCreate = ({ clientId, handleAnswearOnChange, ...props }) => {
   const { text, handleTextChange, isCorrect, handleIsCorrectChange, errors } =
-    useAnswearCreate(props.text, props.isCorrect);
+    useAnswearCreate(
+      clientId,
+      props.text,
+      props.isCorrect,
+      handleAnswearOnChange
+    );
 
   return (
     <FormControl

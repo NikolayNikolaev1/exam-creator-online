@@ -10,13 +10,15 @@
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public int AveragePoints { get; set; }
 
         public int GoodPoints { get; set; }
 
         public int VeryGoodPoints { get; set; }
 
-        public int ExcellentPoints { get; set; }
+        public int ExcelentPoints { get; set; }
 
         public FacilityDTO Facility { get; set; }
 

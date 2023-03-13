@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { addAnswear } from "../../services/answearService";
+import { addQuestion } from "../../services/questionService";
 
 const useQuestionCreate = () => {
+  const { examId } = useParams();
   const [text, setText] = useState("");
   const [points, setPoints] = useState(0);
   const [answears, setAnswears] = useState([
@@ -49,6 +53,16 @@ const useQuestionCreate = () => {
     setPoints(currentPoints);
   };
 
+  const handleAnswearOnChange = (changedAnswear) => {
+    setAnswears((oldAnswears) => {
+      const newAnswears = oldAnswears.map((a) =>
+        a.id === changedAnswear.id ? (a = changedAnswear) : a
+      );
+
+      return newAnswears;
+    });
+  };
+
   const handleAddAnswearClick = (event) => {
     event.preventDefault();
     setAnswears((oldAnswears) => [
@@ -65,14 +79,37 @@ const useQuestionCreate = () => {
     setAnswears((oldAnswears) => oldAnswears.filter((a) => a.id !== id));
   };
 
+  const handleAddOnClick = async (event) => {
+    event.preventDefault();
+
+    await addQuestion({
+      text,
+      points,
+      examId,
+    }).then((questionId) => {
+      answears.forEach(
+        async (a) =>
+          await addAnswear({
+            text: a.text,
+            isCorrect: a.isCorrect,
+            questionId,
+          })
+      );
+
+      // TODO: add redirect.
+    });
+  };
+
   return {
     text,
     handleTextChange,
     points,
     handlePointsChange,
     answears,
+    handleAnswearOnChange,
     handleAddAnswearClick,
     handleRemoveAnswearClick,
+    handleAddOnClick,
     errors,
   };
 };

@@ -10,9 +10,9 @@
 
         public Role Role { get; set; }
 
-        public int FacilityId { get; set; }
+        public int? FacilityId { get; set; }
 
-        public Facility Facility { get; set; }
+        public Facility? Facility { get; set; }
         // Collection for student-exam relation.
         public IEnumerable<StudentExam> Exams { get; set; } = new List<StudentExam>();
         // Collection for lecturer-exam relation.

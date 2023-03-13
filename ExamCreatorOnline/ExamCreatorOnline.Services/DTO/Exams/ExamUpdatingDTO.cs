@@ -7,25 +7,29 @@
     public class ExamUpdatingDTO : IMapFrom<Exam>
     {
         [Required]
+        //[Range(3, 15)]
         public string Name { get; set; }
 
+        //[Range(1, 50)]
+        public string Description { get; set; }
+
         [Required]
-        [Range(1, Double.MaxValue)]
+        //[Range(1, Double.MaxValue)]
         public int AveragePoints { get; set; }
 
         [Required]
-        [Range(1, Double.MaxValue)]
+        //[Range(1, Double.MaxValue)]
         public int GoodPoints { get; set; }
 
         [Required]
-        [Range(1, Double.MaxValue)]
+        //[Range(1, Double.MaxValue)]
         public int VeryGoodPoints { get; set; }
 
         [Required]
-        [Range(1, Double.MaxValue)]
-        public int ExcellentPoints { get; set; }
+        //[Range(1, Double.MaxValue)]
+        public int ExcelentPoints { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int LecturerId { get; set; }
     }
 }

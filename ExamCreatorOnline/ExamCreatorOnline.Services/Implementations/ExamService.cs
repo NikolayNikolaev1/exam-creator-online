@@ -54,6 +54,7 @@
             Exam exam = new Exam
             {
                 Name = examDTO.Name,
+                Description = examDTO.Description,
                 IsOpen = false,
                 AveragePoints = examDTO.AveragePoints,
                 GoodPoints = examDTO.GoodPoints,
@@ -121,10 +122,11 @@
             Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == id);
 
             exam.Name = examDTO.Name;
+            exam.Description = examDTO.Description;
             exam.AveragePoints = examDTO.AveragePoints;
             exam.GoodPoints = examDTO.GoodPoints;
             exam.VeryGoodPoints = examDTO.VeryGoodPoints;
-            exam.ExcelentPoints = examDTO.ExcellentPoints;
+            exam.ExcelentPoints = examDTO.ExcelentPoints;
 
             await this.dbContext.SaveChangesAsync();
         }

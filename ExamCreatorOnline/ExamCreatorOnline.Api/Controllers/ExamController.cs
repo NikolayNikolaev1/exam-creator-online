@@ -65,7 +65,7 @@
             return Ok(await this.examService.AllAsync());
         }
 
-        [HttpPut("id:int")]
+        [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -79,7 +79,7 @@
 
             ExamDTO exam = await this.examService.FindByIdAsync(id);
 
-            if (!await base.IsUserAuthorizedAsync(examDTO.UserId, Role.Lecturer, id))
+            if (!await base.IsUserAuthorizedAsync(examDTO.LecturerId, Role.Lecturer, id))
             {
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
@@ -100,7 +100,7 @@
             return Ok();
         }
 
-        [HttpDelete("id:int")]
+        [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

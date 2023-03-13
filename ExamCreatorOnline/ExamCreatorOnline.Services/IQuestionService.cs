@@ -4,7 +4,7 @@
 
     public interface IQuestionService
     {
-        Task CreateAsync(QuestionCreatingDTO questionDTO);
+        Task<int> CreateAsync(QuestionCreatingDTO questionDTO);
 
         Task<bool> ExistsIdAsync(int id);
 

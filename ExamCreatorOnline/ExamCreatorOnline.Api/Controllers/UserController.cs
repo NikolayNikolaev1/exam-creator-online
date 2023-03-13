@@ -2,7 +2,6 @@
 {
     using ExamCreatorOnline.Data.Models;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
     using Services;
     using Services.DTO.Users;
 
@@ -20,14 +19,14 @@
 
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] SystemUserDTO userDTO)
+        public async Task<ActionResult> Create([FromBody] UserOwnerRegisteringDTO userDTO)
         {
             if (userDTO == null)
             {
                 return BadRequest(userDTO);
             }
 
-            await this.userService.CreateSystemOwnerAsync(userDTO.Email, userDTO.Password, userDTO.FacultyName);
+            await this.userService.CreateSystemOwnerAsync(userDTO.Email, userDTO.Password, userDTO.FacilityName);
 
 
             return Ok();
@@ -85,7 +84,7 @@
             return CreatedAtRoute("GetUser", new { id = userId }, userDTO);
         }
 
-        [HttpGet("id:int", Name = "GetUser")]
+        [HttpGet("{id:int}", Name = "GetUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Get(int id)

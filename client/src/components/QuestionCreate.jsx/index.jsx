@@ -1,4 +1,4 @@
-import { ControlPointRounded, DeleteRounded } from "@mui/icons-material";
+import { ControlPointRounded } from "@mui/icons-material";
 import {
   Button,
   FormControl,
@@ -18,8 +18,10 @@ const QuestionCreate = () => {
     points,
     handlePointsChange,
     answears,
+    handleAnswearOnChange,
     handleAddAnswearClick,
     handleRemoveAnswearClick,
+    handleAddOnClick,
     errors,
   } = useQuestionCreate();
 
@@ -48,16 +50,23 @@ const QuestionCreate = () => {
       {errors.points && <FormHelperText error>{errors.points}</FormHelperText>}
       <FormLabel>Answears: </FormLabel>
       <List>
-        {answears.map((a) => (
+        {answears.map((a, i) => (
           <ListItem key={a.id}>
-            <AnswearCreate text={a.text} isCorrect={a.isCorrect} />
-            <Button
-              variant="outlined"
-              startIcon={<ControlPointRounded />}
-              onClick={() => handleRemoveAnswearClick(a.id)}
-            >
-              Remove Answear
-            </Button>
+            <AnswearCreate
+              clientId={a.id}
+              text={a.text}
+              isCorrect={a.isCorrect}
+              handleAnswearOnChange={handleAnswearOnChange}
+            />
+            {i !== 0 && (
+              <Button
+                variant="outlined"
+                startIcon={<ControlPointRounded />}
+                onClick={() => handleRemoveAnswearClick(a.id)}
+              >
+                Remove Answear
+              </Button>
+            )}
           </ListItem>
         ))}
       </List>
@@ -68,6 +77,13 @@ const QuestionCreate = () => {
         onClick={handleAddAnswearClick}
       >
         Add an answear
+      </Button>
+
+      <Button
+        disabled={Object.values(errors).filter((e) => e !== "").length > 0}
+        onClick={handleAddOnClick}
+      >
+        Add
       </Button>
     </FormControl>
   );

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { validatePoints } from "./examCreateHelpers";
+import { redirect } from "react-router-dom";
+import { addExam, editExam } from "../../services/examService";
+import { validatePoints } from "./examHelpers";
 
-const useExamCreate = () => {
+const useExamForm = (exam) => {
+  const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [points, setPoints] = useState({
@@ -73,9 +76,62 @@ const useExamCreate = () => {
     });
   };
 
+  const handleAddOnClick = async (event) => {
+    event.preventDefault();
+
+    const { averagePoints, goodPoints, veryGoodPoints, excelentPoints } =
+      points;
+
+    await addExam({
+      name,
+      description,
+      averagePoints,
+      goodPoints,
+      veryGoodPoints,
+      excelentPoints,
+      facilityId: 1, // TODO: fix after implement AuthContext
+      lecturerId: 13, // TODO: Fix after implement AuthContext
+    });
+  };
+
+  const handleEditOnClick = async (event) => {
+    event.preventDefault();
+
+    const { averagePoints, goodPoints, veryGoodPoints, excelentPoints } =
+      points;
+
+    await editExam(id, {
+      name,
+      description,
+      averagePoints,
+      goodPoints,
+      veryGoodPoints,
+      excelentPoints,
+      lecturerId: 13, // TODO: Fix after implement AuthContext
+    })
+      .then(() => redirect(`/exam/${id}`)) // TODO: finish redirect
+      .catch((error) => {
+        console.log({ error });
+      });
+  };
+
   useEffect(() => {
     validatePoints(points, setErrors);
   }, [points]);
+
+  useEffect(() => {
+    if (typeof exam?.id === "undefined") return;
+
+    setId(exam.id);
+    setName(exam.name);
+    setDescription(exam.description);
+    setPoints({
+      averagePoints: exam.averagePoints,
+      goodPoints: exam.goodPoints,
+      veryGoodPoints: exam.veryGoodPoints,
+      excelentPoints: exam.excelentPoints,
+    });
+  }, [exam]);
 
   return {
     name,
@@ -85,7 +141,9 @@ const useExamCreate = () => {
     points,
     handlePointsChange,
     errors,
+    handleAddOnClick,
+    handleEditOnClick,
   };
 };
 
-export default useExamCreate;
+export default useExamForm;
