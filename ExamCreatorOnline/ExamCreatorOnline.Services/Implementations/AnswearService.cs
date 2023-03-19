@@ -31,6 +31,14 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            Answear answear = await this.dbContext.Answears.FirstAsync(e => e.Id == id);
+
+            this.dbContext.Remove(answear);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public async Task<bool> ExistsIdAsync(int id)
             => await this.dbContext.Answears.AnyAsync(a => a.Id == id);
 

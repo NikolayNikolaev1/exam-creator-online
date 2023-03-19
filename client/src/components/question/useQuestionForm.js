@@ -1,10 +1,16 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { addAnswear } from "../../services/answearService";
-import { addQuestion } from "../../services/questionService";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  addAnswear,
+  deleteAnswear,
+  editAnswear,
+} from "../../services/answearService";
+import { addQuestion, editQuestion } from "../../services/questionService";
 
-const useQuestionCreate = () => {
+const useQuestionForm = (question) => {
+  const navigate = useNavigate();
   const { examId } = useParams();
+  const [id, setId] = useState(0);
   const [text, setText] = useState("");
   const [points, setPoints] = useState(0);
   const [answears, setAnswears] = useState([
@@ -14,6 +20,7 @@ const useQuestionCreate = () => {
       isCorrect: true,
     },
   ]);
+  const [removedAnswears, setRemovedAnswears] = useState([]);
   const [errors, setErrors] = useState({
     text: "",
     points: "",
@@ -56,7 +63,13 @@ const useQuestionCreate = () => {
   const handleAnswearOnChange = (changedAnswear) => {
     setAnswears((oldAnswears) => {
       const newAnswears = oldAnswears.map((a) =>
-        a.id === changedAnswear.id ? (a = changedAnswear) : a
+        a.id === changedAnswear.id
+          ? (a = {
+              ...a,
+              text: changedAnswear.text,
+              isCorrect: changedAnswear.isCorrect,
+            })
+          : a
       );
 
       return newAnswears;
@@ -76,7 +89,12 @@ const useQuestionCreate = () => {
   };
 
   const handleRemoveAnswearClick = (id) => {
+    console.log({ answears });
+    const removedAnswear = answears.filter((a) => a.id === id)[0];
     setAnswears((oldAnswears) => oldAnswears.filter((a) => a.id !== id));
+
+    if (typeof removedAnswear.questionId !== "undefined")
+      setRemovedAnswears((oldAnswears) => [...oldAnswears, removedAnswear]);
   };
 
   const handleAddOnClick = async (event) => {
@@ -96,9 +114,49 @@ const useQuestionCreate = () => {
           })
       );
 
-      // TODO: add redirect.
+      navigate(`/exam/${examId}`);
     });
   };
+
+  const handleEditOnClick = async (event) => {
+    event.preventDefault();
+
+    await editQuestion(id, {
+      text,
+      points,
+    });
+
+    answears.forEach(async (a) => {
+      if (typeof a.questionId === "undefined") {
+        await addAnswear({
+          text: a.text,
+          isCorrect: a.isCorrect,
+          questionId: id,
+        });
+        return;
+      }
+
+      await editAnswear(a.id, {
+        text: a.text,
+        isCorrect: a.isCorrect,
+      });
+    });
+
+    removedAnswears.forEach(async (a) => {
+      await deleteAnswear(a.id);
+    });
+
+    navigate(`/exam/${examId}`);
+  };
+
+  useEffect(() => {
+    if (typeof question?.id === "undefined") return;
+
+    setId(question.id);
+    setText(question.text);
+    setPoints(question.points);
+    setAnswears(question.answears);
+  }, [question]);
 
   return {
     text,
@@ -110,8 +168,9 @@ const useQuestionCreate = () => {
     handleAddAnswearClick,
     handleRemoveAnswearClick,
     handleAddOnClick,
+    handleEditOnClick,
     errors,
   };
 };
 
-export default useQuestionCreate;
+export default useQuestionForm;

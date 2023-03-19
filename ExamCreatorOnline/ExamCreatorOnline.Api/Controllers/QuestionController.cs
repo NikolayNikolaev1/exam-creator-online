@@ -70,7 +70,8 @@
                 return BadRequest(questionDTO);
             }
 
-            if (await this.questionService.ExistsTextAsync(question.ExamId, questionDTO.Text))
+            if (await this.questionService.ExistsTextAsync(question.ExamId, questionDTO.Text)
+                && question.Text != questionDTO.Text)
             {
                 ModelState.AddModelError("CustomError", "Question text already exists!");
                 return BadRequest(ModelState);

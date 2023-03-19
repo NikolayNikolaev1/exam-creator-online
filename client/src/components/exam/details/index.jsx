@@ -1,19 +1,34 @@
 import { Button, List, ListItem } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { deleteExam } from "../../../services/examService";
+import { deleteQuestion } from "../../../services/questionService";
 import { getExamData } from "../examHelpers";
 
 const ExamDetails = () => {
   const { examId } = useParams();
   const [exam, setExam] = useState({ questions: [] });
 
+  const handleExamDeleteOnClick = async (event) => {
+    event.preventDefault();
+
+    await deleteExam(examId);
+  };
+
+  const handleQuestionDeleteOnClick = async (event, questionId) => {
+    event.preventDefault();
+
+    await deleteQuestion(questionId).then(() =>
+      setExam((oldExam) => ({
+        ...exam,
+        questions: exam.questions.filter((q) => q.id !== questionId),
+      }))
+    );
+  };
+
   useEffect(() => {
     (async () => setExam(await getExamData(examId)))();
   }, [examId]);
-
-  useEffect(() => {
-    console.log({ exam });
-  }, [exam]);
 
   return (
     <Fragment>
@@ -33,6 +48,14 @@ const ExamDetails = () => {
       >
         Add Questions
       </Button>
+
+      <Button
+        variant="contained"
+        color="error"
+        onClick={handleExamDeleteOnClick}
+      >
+        Delete
+      </Button>
       <h1>{exam.name}</h1>
       <p>{exam.description}</p>
       <List>
@@ -41,6 +64,24 @@ const ExamDetails = () => {
             <h2>
               {q.text} - {q.points} pts
             </h2>
+
+            <Button
+              component={Link}
+              to={`/exam/${examId}/question/${q.id}/edit`}
+              variant="contained"
+              color="warning"
+            >
+              Edit Question
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
+              onClick={(e) => handleQuestionDeleteOnClick(e, q.id)}
+            >
+              Delete Question
+            </Button>
+
             <List>
               {q.answears.map((a, i) => (
                 <ListItem key={a.id}>

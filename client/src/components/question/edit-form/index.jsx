@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { ControlPointRounded } from "@mui/icons-material";
 import {
   Button,
@@ -8,10 +10,13 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import AnswearCreate from "../AnswearCreate";
-import useQuestionCreate from "./useQuestionCreate";
+import useQuestionForm from "../useQuestionForm";
+import { getQuestionData } from "../questionHelpers";
+import AnswearCreate from "../../AnswearCreate";
 
-const QuestionCreate = () => {
+const QuestionEdit = () => {
+  const { questionId } = useParams();
+  const [question, setQuestion] = useState({});
   const {
     text,
     handleTextChange,
@@ -21,9 +26,13 @@ const QuestionCreate = () => {
     handleAnswearOnChange,
     handleAddAnswearClick,
     handleRemoveAnswearClick,
-    handleAddOnClick,
+    handleEditOnClick,
     errors,
-  } = useQuestionCreate();
+  } = useQuestionForm(question);
+
+  useEffect(() => {
+    (async () => setQuestion(await getQuestionData(questionId)))();
+  }, [questionId]);
 
   return (
     <FormControl
@@ -58,7 +67,7 @@ const QuestionCreate = () => {
               isCorrect={a.isCorrect}
               handleAnswearOnChange={handleAnswearOnChange}
             />
-            {i !== 0 && (
+            {answears.length > 1 && (
               <Button
                 variant="outlined"
                 startIcon={<ControlPointRounded />}
@@ -81,12 +90,12 @@ const QuestionCreate = () => {
 
       <Button
         disabled={Object.values(errors).filter((e) => e !== "").length > 0}
-        onClick={handleAddOnClick}
+        onClick={handleEditOnClick}
       >
-        Add
+        Save changes
       </Button>
     </FormControl>
   );
 };
 
-export default QuestionCreate;
+export default QuestionEdit;

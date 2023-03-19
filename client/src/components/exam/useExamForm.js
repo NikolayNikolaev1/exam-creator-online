@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { addExam, editExam } from "../../services/examService";
 import { validatePoints } from "./examHelpers";
 
 const useExamForm = (exam) => {
+  const navigate = useNavigate();
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -109,7 +110,7 @@ const useExamForm = (exam) => {
       excelentPoints,
       lecturerId: 13, // TODO: Fix after implement AuthContext
     })
-      .then(() => redirect(`/exam/${id}`)) // TODO: finish redirect
+      .then(() => navigate(`/exam/${id}`))
       .catch((error) => {
         console.log({ error });
       });

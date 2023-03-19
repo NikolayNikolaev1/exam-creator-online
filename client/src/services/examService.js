@@ -46,3 +46,19 @@ export const editExam = async (id, body) => {
     }
   });
 };
+
+
+export const deleteExam = async (id) => {
+  return await fetch(`${baseUrl}/Exam/${id}`, {
+    method: "DELETE",
+    mode: "cors", // no-cors, *cors, same-origin
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (!response.ok) {
+      throw { statusCode: response.status };
+    }
+  });
+};
+

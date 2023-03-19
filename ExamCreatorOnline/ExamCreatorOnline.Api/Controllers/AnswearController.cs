@@ -53,7 +53,8 @@
                 return BadRequest(answearDTO);
             }
 
-            if (await this.answearService.ExistsTextAsync(answear.QuestionId, answearDTO.Text))
+            if (await this.answearService.ExistsTextAsync(answear.QuestionId, answearDTO.Text)
+                && answear.Text != answearDTO.Text)
             {
                 ModelState.AddModelError("CustomError", "Answear text already exists!");
                 return BadRequest(ModelState);
@@ -62,6 +63,22 @@
             await this.answearService.UpdateAsync(id, answearDTO);
 
             return Ok();
+        }
+
+
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!await this.answearService.ExistsIdAsync(id))
+            {
+                return NotFound(id);
+            }
+
+            await this.answearService.DeleteAsync(id);
+
+            return NoContent();
         }
     }
 }
