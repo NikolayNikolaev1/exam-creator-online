@@ -44,6 +44,7 @@
             return CreatedAtRoute("GetExam", new { id = examId }, examDTO);
         }
 
+
         [HttpGet("{id:int}", Name = "GetExam")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExamDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -97,6 +98,62 @@
             }
 
             await this.examService.UpdateAsync(id, examDTO);
+
+            return Ok();
+        }
+
+        [HttpPut("~/api/Exam/{id:int}/StudentAdd")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> AddStudent(int id, [FromBody] StudentManagingDTO dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest(dto);
+            }
+
+            if (!await this.examService.ExistsIdAsync(id))
+            {
+                return NotFound(id);
+            }
+
+            if (!await base.IsUserAuthorizedAsync(dto.LecturerId, Role.Lecturer, id))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
+            await this.examService.AddStudentsAsync(id, dto.StudentIds);
+
+
+            return Ok();
+        }
+
+        [HttpPut("~/api/Exam/{id:int}/StudentRemove")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> RemoveStudent(int id, [FromBody] StudentManagingDTO dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest(dto);
+            }
+
+            if (!await this.examService.ExistsIdAsync(id))
+            {
+                return NotFound(id);
+            }
+
+            if (!await base.IsUserAuthorizedAsync(dto.LecturerId, Role.Lecturer, id))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
+            await this.examService.RemoveStudentsAsync(id, dto.StudentIds);
+
 
             return Ok();
         }

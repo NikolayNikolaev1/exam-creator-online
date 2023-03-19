@@ -18,29 +18,16 @@
             this.mapper = mapper;
         }
 
-        public async Task AddQuestionsAsync(int examId, IEnumerable<int> questionIds)
-        {
-            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
-            IEnumerable<Question> questions = this.dbContext
-                .Questions
-                .Where(eq => questionIds.Any(q => q == eq.Id));
-            exam.Questions.ToList().AddRange(questions);
-
-            await this.dbContext.SaveChangesAsync();
-        }
-
         public async Task AddStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
             Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
-            IEnumerable<User> students = this.dbContext
-                .Users
-                .Where(u => studentIds.Any(s => s == u.Id));
-            students.ToList().ForEach(delegate (User s)
-            {
-                exam.Students.ToList().Add(new StudentExam { ExamId = examId, StudentId = s.Id });
-            });
 
-            await this.dbContext.SaveChangesAsync();
+            foreach (int studentId in studentIds)
+            {
+                await this.dbContext.AddAsync(new StudentExam { ExamId = examId, StudentId = studentId });
+            }
+
+            this.dbContext.SaveChanges();
         }
 
         public async Task<IEnumerable<ExamDTO>> AllAsync()
@@ -91,18 +78,6 @@
             .Exams
             .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)
             .FirstAsync(e => e.Id == id);
-
-        public Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        // TODO: exam-question ondelete.cascade
-        //public Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds)
-        //{
-        //    Exam exam = this.dbContext.Exams.First(e => e.Id == examId);
-        //    exam.Questions.
-        //}
 
         public async Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)
         {

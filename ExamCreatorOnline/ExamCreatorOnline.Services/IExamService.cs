@@ -6,8 +6,6 @@
     {
         Task AddStudentsAsync(int examId, IEnumerable<int> studentIds);
 
-        Task AddQuestionsAsync(int examId, IEnumerable<int> questionIds);
-
         Task<IEnumerable<ExamDTO>> AllAsync();
 
         Task<int> CreateAsync(ExamCreatingDTO examDTO);
@@ -21,8 +19,6 @@
         Task<ExamDTO> FindByIdAsync(int id);
 
         Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
-
-        Task RemoveQuestionsAsync(int examId, IEnumerable<int> questionIds);
 
         Task UpdateAsync(int id, ExamUpdatingDTO examDTO);
     }
