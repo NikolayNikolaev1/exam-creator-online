@@ -89,7 +89,6 @@ const useQuestionForm = (question) => {
   };
 
   const handleRemoveAnswearClick = (id) => {
-    console.log({ answears });
     const removedAnswear = answears.filter((a) => a.id === id)[0];
     setAnswears((oldAnswears) => oldAnswears.filter((a) => a.id !== id));
 

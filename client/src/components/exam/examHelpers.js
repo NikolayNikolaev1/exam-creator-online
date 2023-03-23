@@ -1,5 +1,12 @@
 import { getExam } from "../../services/examService";
 
+export const EXAM_POINTS = {
+  averagePoints: "Average",
+  goodPoints: "Good",
+  veryGoodPoints: "Very Good",
+  excelentPoints: "Excelent",
+};
+
 export const getExamData = async (examId) => {
   return await getExam(examId)
     .then((data) => {

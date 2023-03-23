@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, FormControl, FormHelperText, TextField } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import PointsInputItem from "../points-input-item";
 import useExamForm from "../useExamForm";
-import { getExamData } from "../examHelpers";
+import { EXAM_POINTS, getExamData } from "../examHelpers";
+import { Container } from "@mui/system";
 
 const ExamEdit = () => {
   const { examId } = useParams();
@@ -23,79 +32,63 @@ const ExamEdit = () => {
   }, [examId]);
 
   return (
-    <FormControl
-      sx={{
-        "& .MuiTextField-root": { m: 1, width: "25ch" },
-      }}
-    >
-      <TextField
-        id="name"
-        label="Name"
-        variant="outlined"
-        value={name}
-        onChange={handleNameChange}
-      />
-      {errors.name && <FormHelperText error>{errors.name}</FormHelperText>}
-      <TextField
-        id="description"
-        label="Description"
-        multiline
-        rows={4}
-        variant="outlined"
-        value={description}
-        onChange={handleDescriptionChange}
-      />
-      <TextField
-        id="avg-points"
-        label="Average Points"
-        type="number"
-        variant="outlined"
-        value={points.averagePoints}
-        onChange={(e) => handlePointsChange(e, "averagePoints")}
-      />
-      {errors.averagePoints && (
-        <FormHelperText error>{errors.averagePoints}</FormHelperText>
-      )}
-      <TextField
-        id="good-points"
-        label="Good Points"
-        type="number"
-        variant="outlined"
-        value={points.goodPoints}
-        onChange={(e) => handlePointsChange(e, "goodPoints")}
-      />
-      {errors.goodPoints && (
-        <FormHelperText error>{errors.goodPoints}</FormHelperText>
-      )}
-      <TextField
-        id="very-good-points"
-        label="Very Good Points"
-        type="number"
-        variant="outlined"
-        value={points.veryGoodPoints}
-        onChange={(e) => handlePointsChange(e, "veryGoodPoints")}
-      />
-      {errors.veryGoodPoints && (
-        <FormHelperText error>{errors.veryGoodPoints}</FormHelperText>
-      )}
-      <TextField
-        id="excelent-points"
-        label="Excelent Points"
-        type="number"
-        variant="outlined"
-        value={points.excelentPoints}
-        onChange={(e) => handlePointsChange(e, "excelentPoints")}
-      />
-      {errors.excelentPoints && (
-        <FormHelperText error>{errors.excelentPoints}</FormHelperText>
-      )}
-      <Button
-        disabled={Object.values(errors).filter((e) => e !== "").length > 0}
-        onClick={handleEditOnClick}
+    <Container maxWidth="sm" sx={{ mb: 4 }}>
+      <Typography variant="h5">Edit {name}</Typography>
+      <FormControl
+        sx={{
+          "& .MuiTextField-root": { m: 1 },
+        }}
       >
-        Edit
-      </Button>
-    </FormControl>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12}>
+            <TextField
+              id="name"
+              label="Name"
+              variant="outlined"
+              fullWidth
+              value={name}
+              onChange={handleNameChange}
+            />
+            {errors.name && (
+              <FormHelperText error>{errors.name}</FormHelperText>
+            )}
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              id="description"
+              label="Description"
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+              value={description}
+              onChange={handleDescriptionChange}
+            />
+          </Grid>
+
+          {Object.keys(EXAM_POINTS).map((ep) => (
+            <Grid key={ep} item xs={3}>
+              <PointsInputItem
+                label={EXAM_POINTS[ep]}
+                value={ep}
+                points={points[ep]}
+                handlePointsChange={handlePointsChange}
+                error={errors[ep]}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        <Button
+          variant="contained"
+          disabled={Object.values(errors).filter((e) => e !== "").length > 0}
+          onClick={handleEditOnClick}
+        >
+          Edit Exam
+        </Button>
+      </FormControl>
+    </Container>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Button, List, ListItem } from "@mui/material";
+import { Button, Container, Grid, List, ListItem } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { deleteExam } from "../../../services/examService";
@@ -31,70 +31,93 @@ const ExamDetails = () => {
   }, [examId]);
 
   return (
-    <Fragment>
-      <Button
-        component={Link}
-        to={`/exam/${examId}/edit`}
-        variant="contained"
-        color="warning"
-      >
-        Edit
-      </Button>
-      <Button
-        component={Link}
-        to={`/exam/${examId}/question/create`}
-        variant="contained"
-        color="primary"
-      >
-        Add Questions
-      </Button>
+    <Container maxWidth="sm" sx={{ mb: 4 }}>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            component={Link}
+            to={`/exam/${examId}/question/create`}
+          >
+            Add Questions
+          </Button>
+        </Grid>
 
-      <Button
-        variant="contained"
-        color="error"
-        onClick={handleExamDeleteOnClick}
-      >
-        Delete
-      </Button>
-      <h1>{exam.name}</h1>
-      <p>{exam.description}</p>
-      <List>
-        {exam.questions.map((q) => (
-          <ListItem key={q.id}>
-            <h2>
-              {q.text} - {q.points} pts
-            </h2>
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            color="warning"
+            fullWidth
+            component={Link}
+            to={`/exam/${examId}/edit`}
+          >
+            Edit
+          </Button>
+        </Grid>
 
-            <Button
-              component={Link}
-              to={`/exam/${examId}/question/${q.id}/edit`}
-              variant="contained"
-              color="warning"
-            >
-              Edit Question
-            </Button>
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            color="error"
+            fullWidth
+            onClick={handleExamDeleteOnClick}
+          >
+            Delete
+          </Button>
+        </Grid>
 
-            <Button
-              variant="contained"
-              color="error"
-              onClick={(e) => handleQuestionDeleteOnClick(e, q.id)}
-            >
-              Delete Question
-            </Button>
+        <Grid item xs={12}>
+          <h1>{exam.name}</h1>
+        </Grid>
 
-            <List>
-              {q.answears.map((a, i) => (
-                <ListItem key={a.id}>
-                  <h3>
-                    {i + 1}. {a.text}
-                  </h3>
-                </ListItem>
-              ))}
-            </List>
-          </ListItem>
-        ))}
-      </List>
-    </Fragment>
+        <Grid item xs={12}>
+          <p>{exam.description}</p>
+        </Grid>
+
+        <List>
+          {exam.questions.map((q) => (
+            <ListItem key={q.id}>
+              <Grid item xs={4}>
+                <h2>{q.text}</h2>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Button
+                  component={Link}
+                  to={`/exam/${examId}/question/${q.id}/edit`}
+                  variant="contained"
+                  color="warning"
+                >
+                  Edit 
+                </Button>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={(e) => handleQuestionDeleteOnClick(e, q.id)}
+                >
+                  Delete 
+                </Button>
+              </Grid>
+
+              <List>
+                {q.answears.map((a, i) => (
+                  <ListItem key={a.id}>
+                    <h3>
+                      {i + 1}. {a.text}
+                    </h3>
+                  </ListItem>
+                ))}
+              </List>
+            </ListItem>
+          ))}
+        </List>
+      </Grid>
+    </Container>
   );
 };
 
