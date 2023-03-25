@@ -5,8 +5,6 @@
 
     public interface IUserService
     {
-        Task CreateSystemOwnerAsync(string email, string password, string facilityName);
-
         Task<int> CreateUserAsync(UserRegisteringDTO userDTO);
 
         Task<bool> ExistsEmailAsync(string email);
@@ -17,8 +15,8 @@
 
         Task<Role> FindRoleAsync(int userId);
 
-        Task<bool> HasCorrectCredentialsAsync(UserLogingDTO userDTO);
-
         Task<bool> HasExamIdAsync(int userId, int examId);
+
+        Task<UserDTO> LoginAsync(UserLogingDTO userDTO);
     }
 }

@@ -1,7 +1,7 @@
 const baseUrl = "https://localhost:7052/api";
 
-export const login = async (body) => {
-  return await fetch(`${baseUrl}/Login`, {
+export const createFacilityOwner = async (body) => {
+  return await fetch(`${baseUrl}/Facility/Create`, {
     method: "POST",
     mode: "cors", // no-cors, *cors, same-origin
     headers: {
@@ -16,14 +16,13 @@ export const login = async (body) => {
   });
 };
 
-export const register = async (body) => {
-  return await fetch(`${baseUrl}/Register`, {
-    method: "POST",
+export const getFacility = async (id) => {
+  return await fetch(`${baseUrl}/Facility/${id}`, {
+    method: "GET",
     mode: "cors", // no-cors, *cors, same-origin
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
   }).then((response) => {
     if (!response.ok) {
       throw { statusCode: response.status };

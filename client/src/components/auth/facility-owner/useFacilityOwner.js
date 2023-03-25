@@ -1,12 +1,16 @@
-import { useState } from "react";
-import { createFacilityOwner } from "../../../services/authService";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../contexts/AuthContext";
+import { createFacilityOwner } from "../../../services/facilityService";
 import useAuth from "../useAuth";
 
 const useFacilityOwner = () => {
+  const { auth } = useAuthContext();
   const { email, handleEmailChange, password, handlePasswordChange } =
     useAuth();
   const [facilityName, setFacilityNmae] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleFacilityNameChange = (event) => {
     event.preventDefault();
@@ -36,11 +40,18 @@ const useFacilityOwner = () => {
     await createFacilityOwner({
       email,
       password,
-      facilityName,
+      name: facilityName,
+      adminId: auth.id,
     }).then(() => {
       setError("");
     });
   };
+
+  useEffect(() => {
+    if (auth.role !== "Admin") {
+      navigate("/");
+    }
+  }, [auth]);
 
   return {
     email,

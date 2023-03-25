@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { addExam, editExam } from "../../services/examService";
 import { validatePoints } from "./examHelpers";
 
 const useExamForm = (exam) => {
+  const { auth } = useAuthContext();
   const navigate = useNavigate();
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
@@ -90,8 +92,8 @@ const useExamForm = (exam) => {
       goodPoints,
       veryGoodPoints,
       excelentPoints,
-      facilityId: 1, // TODO: fix after implement AuthContext
-      lecturerId: 13, // TODO: Fix after implement AuthContext
+      facilityId: auth.facilityId,
+      lecturerId: auth.id,
     });
   };
 
@@ -108,7 +110,7 @@ const useExamForm = (exam) => {
       goodPoints,
       veryGoodPoints,
       excelentPoints,
-      lecturerId: 13, // TODO: Fix after implement AuthContext
+      lecturerId: auth.id,
     })
       .then(() => navigate(`/exam/${id}`))
       .catch((error) => {
@@ -133,6 +135,12 @@ const useExamForm = (exam) => {
       excelentPoints: exam.excelentPoints,
     });
   }, [exam]);
+
+  useEffect(() => {
+    if (auth.role !== "Lecturer") {
+      navigate("/");
+    }
+  }, [auth]);
 
   return {
     name,

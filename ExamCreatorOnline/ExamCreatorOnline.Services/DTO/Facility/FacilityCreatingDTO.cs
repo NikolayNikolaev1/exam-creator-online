@@ -1,11 +1,12 @@
-﻿namespace ExamCreatorOnline.Services.DTO.Users
+﻿namespace ExamCreatorOnline.Services.DTO.Facility
 {
-    using Core.Mapping;
-    using Data.Models;
     using System.ComponentModel.DataAnnotations;
 
-    public class UserOwnerRegisteringDTO : IMapFrom<User>
+    public class FacilityCreatingDTO
     {
+        [Required]
+        public string Name { get; set; }
+
         [Required]
         public string Email { get; set; }
 
@@ -13,6 +14,6 @@
         public string Password { get; set; }
 
         [Required]
-        public string FacilityName { get; set; }
+        public int AdminId { get; set; }
     }
 }

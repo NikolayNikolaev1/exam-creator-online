@@ -6,6 +6,8 @@
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public IEnumerable<User> Members { get; set; } = new List<User>();
 
         public IEnumerable<Exam> Exams { get; set; } = new List<Exam>();

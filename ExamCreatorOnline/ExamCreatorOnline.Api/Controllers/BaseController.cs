@@ -10,8 +10,10 @@
 
         public BaseController(IUserService userService)
         {
-            this.userService = userService;
+            this.UserService = userService;
         }
+
+        protected IUserService UserService { get; set; }
 
         protected async Task<bool> IsUserAuthorizedAsync(int userId, Role authRole, int examId = -1)
         {

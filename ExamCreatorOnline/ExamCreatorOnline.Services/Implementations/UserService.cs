@@ -18,29 +18,6 @@
             this.mapper = mapper;
         }
 
-        public async Task CreateSystemOwnerAsync(string email, string password, string facilityName)
-        {
-
-            Facility facility = new Facility
-            {
-                Name = facilityName
-            };
-
-            await this.dbContext.AddAsync(facility);
-            await this.dbContext.SaveChangesAsync();
-
-            User owner = new User
-            {
-                Email = email,
-                Password = password,
-                FacilityId = facility.Id,
-                Role = Role.Owner
-            };
-
-            await this.dbContext.AddAsync(owner);
-            await this.dbContext.SaveChangesAsync();
-        }
-
         public async Task<int> CreateUserAsync(UserRegisteringDTO userDTO)
         {
             User user = new User
@@ -78,10 +55,20 @@
             return user.Role;
         }
 
-        public async Task<bool> HasCorrectCredentialsAsync(UserLogingDTO userDTO)
-            => await this.dbContext
+        public async Task<UserDTO> LoginAsync(UserLogingDTO userDTO)
+        {
+            User user = await this.dbContext
             .Users
-            .AnyAsync(u => u.Email == userDTO.Email && u.Password == userDTO.Password);
+            .FirstOrDefaultAsync(u => u.Email == userDTO.Email && u.Password == userDTO.Password);
+
+            return user != null 
+                ? await this.dbContext
+                    .Users
+                    .ProjectTo<UserDTO>(this.mapper.ConfigurationProvider)
+                    .FirstAsync(u => u.Id == user.Id) 
+                : null;
+
+        }
 
         public async Task<bool> HasExamIdAsync(int userId, int examId)
             => await this.dbContext

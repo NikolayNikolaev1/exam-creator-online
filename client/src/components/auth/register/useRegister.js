@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../contexts/AuthContext";
 import { register } from "../../../services/authService";
 import useAuth from "../useAuth";
 
 const useRegister = () => {
+  const { auth } = useAuthContext();
   const { email, handleEmailChange, password, handlePasswordChange } =
     useAuth();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState("lecturer");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
     event.preventDefault();
@@ -43,10 +47,16 @@ const useRegister = () => {
       firstName,
       lastName,
       roleId: role === "lecturer" ? 2 : 3,
-      facilityId: 1, // TODO: add dynamic facility
-      creatorId: 11, // TODO: add dynamci
+      facilityId: auth.facilityId,
+      creatorId: auth.id,
     });
   };
+
+  useEffect(() => {
+    if (auth.role !== "Owner") {
+      navigate("/");
+    }
+  }, [auth]);
 
   return {
     email,

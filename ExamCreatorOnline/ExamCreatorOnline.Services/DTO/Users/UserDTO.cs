@@ -18,6 +18,8 @@
 
         public string Role { get; set; }
 
+        public int FacilityId { get; set; }
+
         //public IEnumerable<ExamDTO> Exams { get; set; }
 
         public IEnumerable<ExamDTO> Examings { get; set; }

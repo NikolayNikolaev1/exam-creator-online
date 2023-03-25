@@ -1,6 +1,6 @@
 ﻿namespace ExamCreatorOnline.Api.Controllers
 {
-    using ExamCreatorOnline.Data.Models;
+    using Data.Models;
     using Microsoft.AspNetCore.Mvc;
     using Services;
     using Services.DTO.Users;
@@ -17,23 +17,9 @@
             this.userService = userService;
         }
 
-
-        [HttpPost]
-        public async Task<ActionResult> Create([FromBody] UserOwnerRegisteringDTO userDTO)
-        {
-            if (userDTO == null)
-            {
-                return BadRequest(userDTO);
-            }
-
-            await this.userService.CreateSystemOwnerAsync(userDTO.Email, userDTO.Password, userDTO.FacilityName);
-
-
-            return Ok();
-        }
-
         [HttpPost("~/api/Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Login([FromBody] UserLogingDTO userDTO)
         {
@@ -42,13 +28,14 @@
                 return BadRequest(userDTO);
             }
 
-            if (!await this.userService.HasCorrectCredentialsAsync(userDTO))
+            UserDTO user = await this.userService.LoginAsync(userDTO);
+
+            if (user == null)
             {
-                ModelState.AddModelError("CustomError", "User credentails missmatch!");
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            return Ok();
+            return Ok(user);
         }
 
         [HttpPost("~/api/Register")]

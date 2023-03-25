@@ -2,6 +2,7 @@
 {
     using Core.Mapping;
     using Data.Models;
+    using Facility;
     using Questions;
 
     public class ExamDTO : IMapFrom<Exam>

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../contexts/AuthContext";
 import { login } from "../../../services/authService";
 import "../Auth.css";
 import useAuth from "../useAuth";
@@ -7,6 +9,8 @@ const Login = () => {
   const { email, handleEmailChange, password, handlePasswordChange } =
     useAuth();
   const [error, setError] = useState("");
+  const { onLogin } = useAuthContext();
+  const navigate = useNavigate();
 
   const handleLoginOnClick = async (event) => {
     event.preventDefault();
@@ -16,7 +20,9 @@ const Login = () => {
       return;
     }
 
-    await login({ email, password });
+    await onLogin({ email, password })
+      .then(() => navigate("/"))
+      .catch((error) => setError(error));
   };
 
   return (
