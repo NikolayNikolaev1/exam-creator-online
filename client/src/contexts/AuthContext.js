@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
         setAuth({
           id: response.id,
           email: response.email,
+          name: response.firstName + " " + response.lastName,
           role: response.role,
           facilityId: response.facilityId,
         });

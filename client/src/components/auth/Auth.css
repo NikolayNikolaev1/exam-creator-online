@@ -723,15 +723,17 @@ body {
 
 }
 
-.get-started p {
+.get-started-title {
   font-size: 30pt;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.get-started p {
   font-weight: 700;
   display: flex;
   align-items: center;
   color: #2f3542;
-  margin-top: 20px;
-  margin-bottom: 30px;
-
 }
 
 .get-started h5 {

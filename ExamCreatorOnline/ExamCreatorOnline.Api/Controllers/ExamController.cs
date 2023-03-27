@@ -90,7 +90,7 @@
                 return BadRequest(examDTO);
             }
 
-            if (await this.examService.ExistsNameAsync(exam.Facility.Id, examDTO.Name)
+            if (await this.examService.ExistsNameAsync(exam.FacilityId, examDTO.Name)
                 && exam.Name != examDTO.Name)
             {
                 ModelState.AddModelError("CustomError", "Exam name already exists!");

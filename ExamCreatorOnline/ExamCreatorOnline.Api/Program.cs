@@ -16,6 +16,7 @@ builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFacilityService, FacilityService>();
 builder.Services.AddScoped<IExamService, ExamService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IAnswearService, AnswearService>();

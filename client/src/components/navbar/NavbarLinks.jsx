@@ -21,8 +21,10 @@ const Logout = () => {
   );
 };
 
-const NavbarLinks = ({ role }) => {
-  switch (role) {
+const NavbarLinks = () => {
+  const { auth } = useAuthContext();
+
+  switch (auth.role) {
     case "Admin":
       return (
         <Fragment>
@@ -38,6 +40,13 @@ const NavbarLinks = ({ role }) => {
         <Fragment>
           <Button color="inherit" component={Link} to="/register">
             Register Facility User
+          </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to={`/facility/${auth.facilityId}/edit`}
+          >
+            Edit Facility
           </Button>
           <Logout />
         </Fragment>

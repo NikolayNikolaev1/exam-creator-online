@@ -60,5 +60,33 @@
             return Ok(await this.facilityService.FindByIdAsync(id));
         }
 
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Update(int id, [FromBody] FacilityUpdatingDTO facilityDTO)
+        {
+            if (!await this.facilityService.ExistsIdAsync(id))
+            {
+                return NotFound(id);
+            }
+
+            FacilityDTO facility = await this.facilityService.FindByIdAsync(id);
+
+            if (!await base.IsUserAuthorizedAsync(facilityDTO.OwnerId, Role.Owner, id))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
+            if (facilityDTO == null)
+            {
+                return BadRequest(facilityDTO);
+            }
+
+            await this.facilityService.UpdateAsync(id, facilityDTO);
+
+            return Ok();
+        }
     }
 }

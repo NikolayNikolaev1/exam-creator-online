@@ -74,5 +74,9 @@
             => await this.dbContext
             .Users
             .AnyAsync(u => u.Id == userId && u.Examinings.Any(e => e.Id == examId));
+
+        public async Task<bool> IsFacilityOwnerAsync(int userId, int facilityId)
+            => await this.dbContext
+                .Users.AnyAsync(u => u.Id == userId && u.FacilityId == facilityId);
     }
 }

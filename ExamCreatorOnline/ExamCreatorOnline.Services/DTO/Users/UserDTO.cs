@@ -22,7 +22,7 @@
 
         //public IEnumerable<ExamDTO> Exams { get; set; }
 
-        public IEnumerable<ExamDTO> Examings { get; set; }
+        //public IEnumerable<ExamDTO> Examings { get; set; }
 
         //public void ConfigureMapping(Profile mapper)
         //    => mapper

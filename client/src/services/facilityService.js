@@ -30,3 +30,18 @@ export const getFacility = async (id) => {
     return response.json();
   });
 };
+
+export const editFacility = async (id, body) => {
+  return await fetch(`${baseUrl}/Facility/${id}`, {
+    method: "PUT",
+    mode: "cors", // no-cors, *cors, same-origin
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).then((response) => {
+    if (!response.ok) {
+      throw { statusCode: response.status };
+    }
+  });
+};

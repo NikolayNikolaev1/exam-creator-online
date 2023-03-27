@@ -2,6 +2,7 @@
 {
     using Core.Mapping;
     using Data.Models;
+    using Exams;
     using Users;
 
     public class FacilityDTO : IMapFrom<Facility>
@@ -13,5 +14,7 @@
         public string Description { get; set; }
 
         public IEnumerable<UserDTO> Members { get; set; }
+
+        public IEnumerable<ExamDTO> Exams { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 import { Button, Container, Grid, List, ListItem } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useFAcilityContext } from "../../../contexts/FacilityContext";
 import { deleteExam } from "../../../services/examService";
 import { deleteQuestion } from "../../../services/questionService";
 import { getExamData } from "../examHelpers";
@@ -8,6 +9,7 @@ import { getExamData } from "../examHelpers";
 const ExamDetails = () => {
   const { examId } = useParams();
   const [exam, setExam] = useState({ questions: [] });
+  const { exams } = useFAcilityContext();
 
   const handleExamDeleteOnClick = async (event) => {
     event.preventDefault();
@@ -20,8 +22,8 @@ const ExamDetails = () => {
 
     await deleteQuestion(questionId).then(() =>
       setExam((oldExam) => ({
-        ...exam,
-        questions: exam.questions.filter((q) => q.id !== questionId),
+        ...oldExam,
+        questions: oldExam.questions.filter((q) => q.id !== questionId),
       }))
     );
   };
@@ -90,7 +92,7 @@ const ExamDetails = () => {
                   variant="contained"
                   color="warning"
                 >
-                  Edit 
+                  Edit
                 </Button>
               </Grid>
 
@@ -100,7 +102,7 @@ const ExamDetails = () => {
                   color="error"
                   onClick={(e) => handleQuestionDeleteOnClick(e, q.id)}
                 >
-                  Delete 
+                  Delete
                 </Button>
               </Grid>
 

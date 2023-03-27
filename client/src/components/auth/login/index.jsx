@@ -1,33 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../../contexts/AuthContext";
-import { login } from "../../../services/authService";
 import "../Auth.css";
-import useAuth from "../useAuth";
+import useLogin from "./useLogin";
 
 const Login = () => {
-  const { email, handleEmailChange, password, handlePasswordChange } =
-    useAuth();
-  const [error, setError] = useState("");
-  const { onLogin } = useAuthContext();
-  const navigate = useNavigate();
-
-  const handleLoginOnClick = async (event) => {
-    event.preventDefault();
-
-    if (email === "" || password === "") {
-      setError("Email and password are required.");
-      return;
-    }
-
-    await onLogin({ email, password })
-      .then(() => navigate("/"))
-      .catch((error) => setError(error));
-  };
+  const {
+    email,
+    handleEmailChange,
+    password,
+    handlePasswordChange,
+    error,
+    handleLoginOnClick,
+  } = useLogin();
 
   return (
     <div className="get-started" id="login-screen">
-      <p>
+      <p className="get-started-title">
         Exam <span className="login-p-subtitle">Online</span>
       </p>
 

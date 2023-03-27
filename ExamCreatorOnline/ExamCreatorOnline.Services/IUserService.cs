@@ -17,6 +17,8 @@
 
         Task<bool> HasExamIdAsync(int userId, int examId);
 
+        Task<bool> IsFacilityOwnerAsync(int userId, int facilityId);
+
         Task<UserDTO> LoginAsync(UserLogingDTO userDTO);
     }
 }
