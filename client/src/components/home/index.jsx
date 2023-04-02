@@ -1,13 +1,14 @@
 import { List, ListItem } from "@mui/material";
 import { Fragment, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useFacilityContext } from "../../contexts/FacilityContext";
-import ExamListItem from "../exam/list-item";
 import "./Home.css";
+import CustomListItem from "../list-item";
 
 const Home = () => {
-  const { name, description, exams, members } = useFacilityContext();
+  const { facility } = useFacilityContext();
+  const { name, description, exams, members } = facility;
   const { auth } = useAuthContext();
   const navigate = useNavigate();
 
@@ -38,11 +39,20 @@ const Home = () => {
       <List>
         {exams?.map((e) => (
           <ListItem key={e.id}>
-            <ExamListItem
-              id={e.id}
-              name={e.name}
-              description={e.description}
-              lecturer={e.lecturerName}
+            <CustomListItem
+              resource={"Exam"}
+              header={e.name}
+              contentHeader={`Lecturer: ${
+                members
+                  .filter((m) => m.id === e.lecturerId)
+                  .map((m) => `${m.firstName} ${m.lastName}`)[0]
+              }`}
+              contentText={e.description}
+              buttons={[
+                <Link to={`/exam/${e.id}`}>
+                  <button className="btn">Details</button>
+                </Link>,
+              ]}
             />
           </ListItem>
         ))}

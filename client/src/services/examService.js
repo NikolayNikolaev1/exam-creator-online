@@ -47,7 +47,6 @@ export const editExam = async (id, body) => {
   });
 };
 
-
 export const deleteExam = async (id) => {
   return await fetch(`${baseUrl}/Exam/${id}`, {
     method: "DELETE",
@@ -62,3 +61,34 @@ export const deleteExam = async (id) => {
   });
 };
 
+export const addStudents = async (id, body) => {
+  return await fetch(`${baseUrl}/Exam/${id}/StudentAdd`, {
+    method: "PUT",
+    mode: "cors", // no-cors, *cors, same-origin
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).then((response) => {
+    console.log({ response });
+    if (!response.ok) {
+      throw { statusCode: response.status };
+    }
+  });
+};
+
+export const removeStudents = async (id, body) => {
+  return await fetch(`${baseUrl}/Exam/${id}/StudentRemove`, {
+    method: "PUT",
+    mode: "cors", // no-cors, *cors, same-origin
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).then((response) => {
+    console.log({ response });
+    if (!response.ok) {
+      throw { statusCode: response.status };
+    }
+  });
+};

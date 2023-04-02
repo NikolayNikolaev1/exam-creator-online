@@ -17,7 +17,7 @@ const ExamListItem = ({ id, name, description, lecturer }) => {
             <div className="progress"></div>
             <span className="progress-text">6/9 Challenges</span>
           </div>
-          <h6>Chapter 4</h6>
+          <h6>Lecturer: {lecturer}</h6>
           <p>{description}</p>
           <Link to={`/exam/${id}`}>
             <button className="btn">Details</button>

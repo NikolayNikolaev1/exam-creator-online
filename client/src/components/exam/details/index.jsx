@@ -1,36 +1,39 @@
-import { Button, Container, Grid, List, ListItem } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useFAcilityContext } from "../../../contexts/FacilityContext";
+import {
+  Autocomplete,
+  Button,
+  Container,
+  Grid,
+  List,
+  ListItem,
+  TextField,
+} from "@mui/material";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteExam } from "../../../services/examService";
-import { deleteQuestion } from "../../../services/questionService";
-import { getExamData } from "../examHelpers";
+import useExamDetails from "./useExamDetails";
+import CustomListItem from "../../list-item";
 
 const ExamDetails = () => {
   const { examId } = useParams();
-  const [exam, setExam] = useState({ questions: [] });
-  const { exams } = useFAcilityContext();
+  const {
+    exam,
+    members,
+    selectedStudents,
+    showAddStudents,
+    handleAddStudentOnClick,
+    showRemoveStudents,
+    handleRemoveStudentOnClick,
+    handleStudentsSaveOnClick,
+    handleSelectedStudentsOnChange,
+    addStudentsOnClick,
+    removeStudentsOnClick,
+    handleQuestionDeleteOnClick,
+  } = useExamDetails(examId);
 
   const handleExamDeleteOnClick = async (event) => {
     event.preventDefault();
 
     await deleteExam(examId);
   };
-
-  const handleQuestionDeleteOnClick = async (event, questionId) => {
-    event.preventDefault();
-
-    await deleteQuestion(questionId).then(() =>
-      setExam((oldExam) => ({
-        ...oldExam,
-        questions: oldExam.questions.filter((q) => q.id !== questionId),
-      }))
-    );
-  };
-
-  useEffect(() => {
-    (async () => setExam(await getExamData(examId)))();
-  }, [examId]);
 
   return (
     <Container maxWidth="sm" sx={{ mb: 4 }}>
@@ -71,52 +74,91 @@ const ExamDetails = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <h1>{exam.name}</h1>
+          <h1>{exam?.name}</h1>
         </Grid>
 
         <Grid item xs={12}>
-          <p>{exam.description}</p>
+          <p>{exam?.description}</p>
         </Grid>
 
         <List>
-          {exam.questions.map((q) => (
+          {exam?.questions.map((q) => (
             <ListItem key={q.id}>
-              <Grid item xs={4}>
-                <h2>{q.text}</h2>
-              </Grid>
-
-              <Grid item xs={4}>
-                <Button
-                  component={Link}
-                  to={`/exam/${examId}/question/${q.id}/edit`}
-                  variant="contained"
-                  color="warning"
-                >
-                  Edit
-                </Button>
-              </Grid>
-
-              <Grid item xs={4}>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={(e) => handleQuestionDeleteOnClick(e, q.id)}
-                >
-                  Delete
-                </Button>
-              </Grid>
-
-              <List>
-                {q.answears.map((a, i) => (
-                  <ListItem key={a.id}>
-                    <h3>
-                      {i + 1}. {a.text}
-                    </h3>
-                  </ListItem>
-                ))}
-              </List>
+              <CustomListItem
+                resource={"Question"}
+                header={q.text}
+                contentList={q.answears}
+                buttons={[
+                  <Link to={`/exam/${examId}/question/${q.id}/edit`}>
+                    <button className="btn-edit">Edit</button>
+                  </Link>,
+                  <Link onClick={(e) => handleQuestionDeleteOnClick(e, q.id)}>
+                    <button className="btn">Delete</button>
+                  </Link>,
+                ]}
+              />
             </ListItem>
           ))}
+        </List>
+
+        <Button onClick={handleAddStudentOnClick}>Add Student</Button>
+        <Button onClick={handleRemoveStudentOnClick}>Remove Student</Button>
+
+        {showAddStudents && (
+          <Autocomplete
+            multiple
+            value={selectedStudents}
+            onChange={(event, newValue) =>
+              handleSelectedStudentsOnChange(event, newValue)
+            }
+            getOptionLabel={(option) => option.email}
+            id="controllable-states-demo"
+            options={members?.filter(
+              (m) => !exam.studentIds.includes(m.id) && m.role === "Student"
+            )}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Students" />}
+          />
+        )}
+
+        {showRemoveStudents && (
+          <Autocomplete
+            multiple
+            value={selectedStudents}
+            onChange={(event, newValue) =>
+              handleSelectedStudentsOnChange(event, newValue)
+            }
+            getOptionLabel={(option) => option.email}
+            id="controllable-states-demo"
+            options={members?.filter(
+              (m) => exam.studentIds.includes(m.id) && m.role === "Student"
+            )}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Students" />}
+          />
+        )}
+
+        {(showAddStudents || showRemoveStudents) && (
+          <Button onClick={handleStudentsSaveOnClick}>Save</Button>
+        )}
+
+        <List>
+          {members &&
+            exam?.studentIds &&
+            members
+              ?.filter(
+                (m) => exam.studentIds.includes(m.id) && m.role === "Student"
+              )
+              ?.map((m) => (
+                <ListItem key={m.id}>
+                  <CustomListItem
+                    resource={"Student"}
+                    header={`${m.firstName} ${m.lastName}`}
+                    contentHeader="Email: "
+                    contentText={m.email}
+                  />
+                </ListItem>
+              ))}
         </List>
       </Grid>
     </Container>

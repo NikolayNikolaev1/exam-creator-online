@@ -33,7 +33,7 @@ export const FacilityProvider = ({ children }) => {
   }, [auth]);
 
   return (
-    <FacilityContext.Provider value={facility}>
+    <FacilityContext.Provider value={{ facility, setFacility }}>
       {children}
     </FacilityContext.Provider>
   );
