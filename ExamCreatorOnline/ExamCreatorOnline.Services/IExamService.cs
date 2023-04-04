@@ -8,6 +8,8 @@
 
         Task<IEnumerable<ExamDTO>> AllAsync();
 
+        Task<IEnumerable<int>> AllStudentIdsAsync(int examId);
+
         Task<int> CreateAsync(ExamCreatingDTO examDTO);
 
         Task DeleteAsync(int id);

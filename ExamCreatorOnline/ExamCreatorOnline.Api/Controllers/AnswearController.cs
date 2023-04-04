@@ -15,7 +15,7 @@
         }
 
         [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AnswearDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Create([FromBody] AnswearCreatingDTO answearDTO)
         {
@@ -30,9 +30,9 @@
                 return BadRequest(ModelState);
             }
 
-            await this.answearService.CreateAsync(answearDTO);
+            int answearId = await this.answearService.CreateAsync(answearDTO);
 
-            return Ok();
+            return Ok(await this.answearService.FindByIdAsync(answearId));
         }
 
         [HttpPut("{id:int}")]

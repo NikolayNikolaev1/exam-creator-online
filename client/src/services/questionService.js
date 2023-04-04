@@ -9,7 +9,6 @@ export const addQuestion = async (body) => {
     },
     body: JSON.stringify(body),
   }).then((response) => {
-    console.log({ response });
     if (!response.ok) {
       throw { statusCode: response.status };
     }
@@ -42,10 +41,11 @@ export const editQuestion = async (id, body) => {
     },
     body: JSON.stringify(body),
   }).then((response) => {
-    console.log({ response });
     if (!response.ok) {
       throw { statusCode: response.status };
     }
+
+    return response.json();
   });
 };
 

@@ -17,7 +17,7 @@
         }
 
         [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(QuestionDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<int>> Create([FromBody] QuestionCreatingDTO questionDTO)
@@ -35,7 +35,7 @@
 
             int questionId = await this.questionService.CreateAsync(questionDTO);
 
-            return Ok(questionId);
+            return Ok(await this.questionService.FindByIdAsync(questionId));
         }
 
         [HttpGet("{id:int}")]
@@ -53,7 +53,7 @@
         }
 
         [HttpPut("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(QuestionDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Update(int id, [FromBody] QuestionUpdatingDTO questionDTO)
@@ -79,7 +79,7 @@
 
             await this.questionService.UpdateAsync(id, questionDTO);
 
-            return Ok();
+            return Ok(await this.questionService.FindByIdAsync(id));
         }
 
         [HttpDelete("{id:int}")]

@@ -13,9 +13,11 @@ import {
 import useQuestionForm from "../useQuestionForm";
 import { getQuestionData } from "../questionHelpers";
 import AnswearCreate from "../../AnswearCreate";
+import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const QuestionEdit = () => {
-  const { questionId } = useParams();
+  const { examId, questionId } = useParams();
+  const { facility } = useFacilityContext();
   const [question, setQuestion] = useState({});
   const {
     text,
@@ -31,7 +33,11 @@ const QuestionEdit = () => {
   } = useQuestionForm(question);
 
   useEffect(() => {
-    (async () => setQuestion(await getQuestionData(questionId)))();
+    setQuestion(
+      facility.exams
+        .find((e) => e.id === +examId)
+        .questions.find((q) => q.id === +questionId)
+    );
   }, [questionId]);
 
   return (

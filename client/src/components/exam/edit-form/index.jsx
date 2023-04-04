@@ -12,9 +12,11 @@ import PointsInputItem from "../points-input-item";
 import useExamForm from "../useExamForm";
 import { EXAM_POINTS, getExamData } from "../examHelpers";
 import { Container } from "@mui/system";
+import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const ExamEdit = () => {
   const { examId } = useParams();
+  const { facility } = useFacilityContext();
   const [exam, setExam] = useState({});
   const {
     name,
@@ -28,7 +30,7 @@ const ExamEdit = () => {
   } = useExamForm(exam);
 
   useEffect(() => {
-    (async () => setExam(await getExamData(examId)))();
+    setExam(facility.exams.find((e) => e.id === +examId));
   }, [examId]);
 
   return (

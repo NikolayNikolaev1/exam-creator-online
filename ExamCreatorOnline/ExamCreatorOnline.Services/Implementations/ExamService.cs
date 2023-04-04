@@ -36,6 +36,13 @@
             .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)
             .ToListAsync();
 
+        public async Task<IEnumerable<int>> AllStudentIdsAsync(int examId)
+        {
+            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
+
+            return exam.Students.Select(s => s.StudentId).ToList();
+        }
+
         public async Task<int> CreateAsync(ExamCreatingDTO examDTO)
         {
             Exam exam = new Exam

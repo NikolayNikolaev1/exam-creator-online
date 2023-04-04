@@ -4,7 +4,7 @@
 
     public interface IAnswearService
     {
-        Task CreateAsync(AnswearCreatingDTO answearDTO);
+        Task<int> CreateAsync(AnswearCreatingDTO answearDTO);
 
         Task<bool> ExistsIdAsync(int id);
 

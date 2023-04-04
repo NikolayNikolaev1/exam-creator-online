@@ -18,7 +18,7 @@
         }
 
         [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExamDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Create([FromBody] ExamCreatingDTO examDTO)
@@ -41,7 +41,7 @@
 
             int examId = await this.examService.CreateAsync(examDTO);
 
-            return CreatedAtRoute("GetExam", new { id = examId }, examDTO);
+            return Ok(await this.examService.FindByIdAsync(examId));
         }
 
 
@@ -67,7 +67,7 @@
         }
 
         [HttpPut("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExamDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,11 +99,11 @@
 
             await this.examService.UpdateAsync(id, examDTO);
 
-            return Ok();
+            return Ok(await this.examService.FindByIdAsync(id));
         }
 
         [HttpPut("~/api/Exam/{id:int}/StudentAdd")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<int>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -127,11 +127,11 @@
             await this.examService.AddStudentsAsync(id, dto.StudentIds);
 
 
-            return Ok();
+            return Ok(await this.examService.AllStudentIdsAsync(id));
         }
 
         [HttpPut("~/api/Exam/{id:int}/StudentRemove")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<int>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -155,7 +155,7 @@
             await this.examService.RemoveStudentsAsync(id, dto.StudentIds);
 
 
-            return Ok();
+            return Ok(await this.examService.AllStudentIdsAsync(id));
         }
 
         [HttpDelete("{id:int}")]

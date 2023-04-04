@@ -11,12 +11,14 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteExam } from "../../../services/examService";
 import useExamDetails from "./useExamDetails";
 import CustomListItem from "../../list-item";
+import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const ExamDetails = () => {
   const { examId } = useParams();
+  const { facility } = useFacilityContext();
+  const { members } = facility;
   const {
     exam,
-    members,
     selectedStudents,
     showAddStudents,
     handleAddStudentOnClick,
@@ -24,16 +26,9 @@ const ExamDetails = () => {
     handleRemoveStudentOnClick,
     handleStudentsSaveOnClick,
     handleSelectedStudentsOnChange,
-    addStudentsOnClick,
-    removeStudentsOnClick,
     handleQuestionDeleteOnClick,
+    handleExamDeleteOnClick,
   } = useExamDetails(examId);
-
-  const handleExamDeleteOnClick = async (event) => {
-    event.preventDefault();
-
-    await deleteExam(examId);
-  };
 
   return (
     <Container maxWidth="sm" sx={{ mb: 4 }}>

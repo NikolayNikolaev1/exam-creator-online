@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { addExam, editExam } from "../../services/examService";
 import { validatePoints } from "./examHelpers";
+import { useFacilityContext } from "../../contexts/FacilityContext";
 
 const useExamForm = (exam) => {
   const { auth } = useAuthContext();
+  const { setFacility } = useFacilityContext();
   const navigate = useNavigate();
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
@@ -94,6 +96,12 @@ const useExamForm = (exam) => {
       excelentPoints,
       facilityId: auth.facilityId,
       lecturerId: auth.id,
+    }).then((response) => {
+      setFacility((oldFacility) => ({
+        ...oldFacility,
+        exams: [...oldFacility.exams, response],
+      }));
+      navigate(`/exam/${response.id}`);
     });
   };
 
@@ -112,7 +120,13 @@ const useExamForm = (exam) => {
       excelentPoints,
       lecturerId: auth.id,
     })
-      .then(() => navigate(`/exam/${id}`))
+      .then((response) => {
+        setFacility((oldFacility) => ({
+          ...oldFacility,
+          exams: oldFacility.exams.map((e) => (e.id === id ? response : e)),
+        }));
+        navigate(`/exam/${id}`);
+      })
       .catch((error) => {
         console.log({ error });
       });

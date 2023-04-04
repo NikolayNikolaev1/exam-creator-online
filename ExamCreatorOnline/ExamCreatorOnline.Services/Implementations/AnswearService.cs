@@ -18,7 +18,7 @@
             this.mapper = mapper;
         }
 
-        public async Task CreateAsync(AnswearCreatingDTO answearDTO)
+        public async Task<int> CreateAsync(AnswearCreatingDTO answearDTO)
         {
             Answear answear = new Answear
             {
@@ -29,6 +29,8 @@
 
             await this.dbContext.AddAsync(answear);
             await this.dbContext.SaveChangesAsync();
+
+            return answear.Id;
         }
 
         public async Task DeleteAsync(int id)

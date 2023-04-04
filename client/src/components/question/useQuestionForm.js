@@ -6,13 +6,15 @@ import {
   editAnswear,
 } from "../../services/answearService";
 import { addQuestion, editQuestion } from "../../services/questionService";
+import { useFacilityContext } from "../../contexts/FacilityContext";
 
 const useQuestionForm = (question) => {
   const navigate = useNavigate();
+  const { setFacility } = useFacilityContext();
   const { examId } = useParams();
   const [id, setId] = useState(0);
   const [text, setText] = useState("");
-  const [points, setPoints] = useState(0);
+  const [points, setPoints] = useState(1);
   const [answears, setAnswears] = useState([
     {
       id: Math.floor(Math.random() * 1000000),
@@ -98,32 +100,40 @@ const useQuestionForm = (question) => {
 
   const handleAddOnClick = async (event) => {
     event.preventDefault();
+    let newQuestion = {};
 
     await addQuestion({
       text,
       points,
       examId,
-    }).then((questionId) => {
-      answears.forEach(
-        async (a) =>
-          await addAnswear({
-            text: a.text,
-            isCorrect: a.isCorrect,
-            questionId,
-          })
-      );
+    }).then(async (questionData) => {
+      newQuestion = questionData;
 
-      navigate(`/exam/${examId}`);
+      for (let i = 0; i < answears.length; i++) {
+        await addAnswear({
+          text: answears[i].text,
+          isCorrect: answears[i].isCorrect,
+          questionId: questionData.id,
+        }).then((answearData) => {
+          newQuestion.answears.push(answearData);
+        });
+      }
+
+      setFacility((oldFacility) => ({
+        ...oldFacility,
+        exams: oldFacility.exams.map((e) =>
+          e.id === +examId
+            ? { ...e, questions: [...e.questions, newQuestion] }
+            : e
+        ),
+      }));
     });
+
+    navigate(`/exam/${examId}`);
   };
 
   const handleEditOnClick = async (event) => {
     event.preventDefault();
-
-    await editQuestion(id, {
-      text,
-      points,
-    });
 
     answears.forEach(async (a) => {
       if (typeof a.questionId === "undefined") {
@@ -142,8 +152,27 @@ const useQuestionForm = (question) => {
     });
 
     removedAnswears.forEach(async (a) => {
-      await deleteAnswear(a.id);
+      deleteAnswear(a.id);
     });
+
+    await editQuestion(id, {
+      text,
+      points,
+    }).then((questionData) =>
+      setFacility((oldFacility) => ({
+        ...oldFacility,
+        exams: oldFacility.exams.map((e) =>
+          e.id === +examId
+            ? {
+                ...e,
+                questions: e.questions.map((q) =>
+                  q.id === id ? questionData : q
+                ),
+              }
+            : e
+        ),
+      }))
+    );
 
     navigate(`/exam/${examId}`);
   };

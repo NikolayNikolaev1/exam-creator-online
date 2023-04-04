@@ -44,6 +44,8 @@ export const editExam = async (id, body) => {
     if (!response.ok) {
       throw { statusCode: response.status };
     }
+
+    return response.json();
   });
 };
 
@@ -74,6 +76,8 @@ export const addStudents = async (id, body) => {
     if (!response.ok) {
       throw { statusCode: response.status };
     }
+
+    return response.json();
   });
 };
 
@@ -90,5 +94,7 @@ export const removeStudents = async (id, body) => {
     if (!response.ok) {
       throw { statusCode: response.status };
     }
+
+    return response.json();
   });
 };
