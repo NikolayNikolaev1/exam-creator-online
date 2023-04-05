@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import AnswearCreate from "./components/AnswearCreate";
+import AnswearForm from "./components/answear/";
 import ExamCreate from "./components/exam/create-form";
 import ExamDetails from "./components/exam/details";
 import ExamEdit from "./components/exam/edit-form";
@@ -41,7 +41,7 @@ const App = () => (
           />
           <Route
             path="/exam/:examId/question/:questionId/answear/create"
-            element={<AnswearCreate />}
+            element={<AnswearForm />}
           />
         </Routes>
 

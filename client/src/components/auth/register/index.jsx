@@ -19,7 +19,7 @@ const Register = () => {
   } = useRegister();
   return (
     <div className="get-started" id="login-screen">
-      <p>
+      <p className="get-started-title">
         Exam <span className="login-p-subtitle">Online</span>
       </p>
       <input
@@ -76,7 +76,7 @@ const Register = () => {
       {error !== "" && <h5>{error}</h5>}
       <input
         type="button"
-        value="Login"
+        value="Register User"
         className="login-btn"
         onClick={handleRegisterOnClick}
       />

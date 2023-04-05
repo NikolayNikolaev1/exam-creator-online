@@ -13,10 +13,10 @@ const useExamForm = (exam) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [points, setPoints] = useState({
-    averagePoints: 0,
-    goodPoints: 0,
-    veryGoodPoints: 0,
-    excelentPoints: 0,
+    averagePoints: 50,
+    goodPoints: 65,
+    veryGoodPoints: 75,
+    excelentPoints: 90,
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -31,11 +31,6 @@ const useExamForm = (exam) => {
     event.preventDefault();
     const currentName = event.target.value;
     let nameErrorMessage = "";
-
-    if (currentName.length < 3 || currentName.length > 15) {
-      nameErrorMessage =
-        "Name length must be between 3 and 15 characters long.";
-    }
 
     if (currentName === "") nameErrorMessage = "Name is required.";
 
@@ -84,6 +79,14 @@ const useExamForm = (exam) => {
   const handleAddOnClick = async (event) => {
     event.preventDefault();
 
+    if (name.length < 3 || name.length > 15) {
+      setErrors((oldErrors) => ({
+        ...oldErrors,
+        name: "Name length must be between 3 and 15 characters long.",
+      }));
+      return;
+    }
+
     const { averagePoints, goodPoints, veryGoodPoints, excelentPoints } =
       points;
 
@@ -96,17 +99,35 @@ const useExamForm = (exam) => {
       excelentPoints,
       facilityId: auth.facilityId,
       lecturerId: auth.id,
-    }).then((response) => {
-      setFacility((oldFacility) => ({
-        ...oldFacility,
-        exams: [...oldFacility.exams, response],
-      }));
-      navigate(`/exam/${response.id}`);
-    });
+    })
+      .then((response) => {
+        setFacility((oldFacility) => ({
+          ...oldFacility,
+          exams: [...oldFacility.exams, response],
+        }));
+        navigate(`/exam/${response.id}`);
+      })
+      .catch((error) => {
+        switch (error.statusCode) {
+          case 400:
+            setErrors((oldErrors) => ({
+              ...oldErrors,
+              name: "Exam name already exists in this facility.",
+            }));
+        }
+      });
   };
 
   const handleEditOnClick = async (event) => {
     event.preventDefault();
+
+    if (name.length < 3 || name.length > 15) {
+      setErrors((oldErrors) => ({
+        ...oldErrors,
+        name: "Name length must be between 3 and 15 characters long.",
+      }));
+      return;
+    }
 
     const { averagePoints, goodPoints, veryGoodPoints, excelentPoints } =
       points;
@@ -128,7 +149,13 @@ const useExamForm = (exam) => {
         navigate(`/exam/${id}`);
       })
       .catch((error) => {
-        console.log({ error });
+        switch (error.statusCode) {
+          case 400:
+            setErrors((oldErrors) => ({
+              ...oldErrors,
+              name: "Exam name already exists in this facility.",
+            }));
+        }
       });
   };
 

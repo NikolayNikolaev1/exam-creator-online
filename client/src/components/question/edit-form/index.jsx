@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import useQuestionForm from "../useQuestionForm";
 import { getQuestionData } from "../questionHelpers";
-import AnswearCreate from "../../AnswearCreate";
+import AnswearForm from "../../answear/";
 import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const QuestionEdit = () => {
@@ -64,10 +64,14 @@ const QuestionEdit = () => {
       />
       {errors.points && <FormHelperText error>{errors.points}</FormHelperText>}
       <FormLabel>Answears: </FormLabel>
+
+      {errors.answears && (
+        <FormHelperText error>{errors.answears}</FormHelperText>
+      )}
       <List>
         {answears.map((a, i) => (
           <ListItem key={a.id}>
-            <AnswearCreate
+            <AnswearForm
               clientId={a.id}
               text={a.text}
               isCorrect={a.isCorrect}

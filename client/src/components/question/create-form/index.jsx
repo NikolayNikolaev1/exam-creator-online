@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AnswearCreate from "../../AnswearCreate";
+import AnswearForm from "../../answear/";
 import useQuestionForm from "../useQuestionForm";
 
 const QuestionCreate = () => {
@@ -65,11 +65,15 @@ const QuestionCreate = () => {
             )}
           </Grid>
           <FormLabel>Answears: </FormLabel>
+
+          {errors.answears && (
+            <FormHelperText error>{errors.answears}</FormHelperText>
+          )}
           <Grid item xs={12}>
             <List>
               {answears.map((a, i) => (
                 <ListItem key={a.id}>
-                  <AnswearCreate
+                  <AnswearForm
                     clientId={a.id}
                     text={a.text}
                     isCorrect={a.isCorrect}
@@ -104,7 +108,9 @@ const QuestionCreate = () => {
             <Button
               variant="contained"
               disabled={
-                Object.values(errors).filter((e) => e !== "").length > 0
+                typeof Object.values(errors).find(
+                  (e) => e !== "" && !e.startsWith("Answear")
+                ) !== "undefined"
               }
               fullWidth
               onClick={handleAddOnClick}

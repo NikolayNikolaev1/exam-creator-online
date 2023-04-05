@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useAnswearCreate = (
+const useAnswear = (
   clientId,
   defaultText,
   defaultIsCorrect,
@@ -17,10 +17,9 @@ const useAnswearCreate = (
     const currentText = event.target.value;
     let textErrorMessage = "";
 
-    if (currentText.length < 5 || currentText.length > 30) {
-      textErrorMessage =
-        "Question text must be between 5 and 30 characters long.";
-    }
+    if (currentText.length === "")
+      textErrorMessage = "Answear text is required.";
+
     setErrors((oldErrors) => ({
       ...oldErrors,
       text: textErrorMessage,
@@ -40,4 +39,4 @@ const useAnswearCreate = (
   return { text, handleTextChange, isCorrect, handleIsCorrectChange, errors };
 };
 
-export default useAnswearCreate;
+export default useAnswear;

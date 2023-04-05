@@ -1,7 +1,7 @@
 const baseUrl = "https://localhost:7052/api";
 
 export const createFacilityOwner = async (body) => {
-  return await fetch(`${baseUrl}/Facility/Create`, {
+  return await fetch(`${baseUrl}/Facility`, {
     method: "POST",
     mode: "cors", // no-cors, *cors, same-origin
     headers: {

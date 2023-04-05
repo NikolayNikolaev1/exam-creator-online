@@ -49,6 +49,12 @@ const useRegister = () => {
       roleId: role === "lecturer" ? 2 : 3,
       facilityId: auth.facilityId,
       creatorId: auth.id,
+    }).catch((error) => {
+      switch (error.statusCode) {
+        case 400:
+          setError(`User with email '${email}' already exists.`);
+          break;
+      }
     });
   };
 

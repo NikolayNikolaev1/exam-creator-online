@@ -42,9 +42,17 @@ const useFacilityOwner = () => {
       password,
       name: facilityName,
       adminId: auth.id,
-    }).then(() => {
-      setError("");
-    });
+    })
+      .then(() => {
+        setError("");
+      })
+      .catch((error) => {
+        switch (error.statusCode) {
+          case 400:
+            setError(`User with email '${email}' already exists.`);
+            break;
+        }
+      });
   };
 
   useEffect(() => {

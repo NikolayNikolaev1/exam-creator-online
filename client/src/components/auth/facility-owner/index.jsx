@@ -14,7 +14,7 @@ const FacilityOwner = () => {
 
   return (
     <div className="get-started" id="login-screen">
-      <p>
+      <p className="get-started-title">
         Exam <span className="login-p-subtitle">Online</span>
       </p>
 

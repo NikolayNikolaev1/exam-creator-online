@@ -6,16 +6,11 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import useAnswearCreate from "./useAnswearCreate";
+import useAnswear from "./useAnswear";
 
-const AnswearCreate = ({ clientId, handleAnswearOnChange, ...props }) => {
+const AnswearForm = ({ clientId, handleAnswearOnChange, ...props }) => {
   const { text, handleTextChange, isCorrect, handleIsCorrectChange, errors } =
-    useAnswearCreate(
-      clientId,
-      props.text,
-      props.isCorrect,
-      handleAnswearOnChange
-    );
+    useAnswear(clientId, props.text, props.isCorrect, handleAnswearOnChange);
 
   return (
     <FormControl
@@ -51,4 +46,4 @@ const AnswearCreate = ({ clientId, handleAnswearOnChange, ...props }) => {
   );
 };
 
-export default AnswearCreate;
+export default AnswearForm;

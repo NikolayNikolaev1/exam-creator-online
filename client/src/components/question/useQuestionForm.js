@@ -7,6 +7,7 @@ import {
 } from "../../services/answearService";
 import { addQuestion, editQuestion } from "../../services/questionService";
 import { useFacilityContext } from "../../contexts/FacilityContext";
+import { isOnSubmitValid } from "./questionHelpers";
 
 const useQuestionForm = (question) => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const useQuestionForm = (question) => {
   const [errors, setErrors] = useState({
     text: "",
     points: "",
+    answears: "",
   });
 
   const handleTextChange = (event) => {
@@ -33,10 +35,8 @@ const useQuestionForm = (question) => {
     const currentText = event.target.value;
     let textErrorMessage = "";
 
-    if (currentText.length < 5 || currentText.length > 30) {
-      textErrorMessage =
-        "Question text must be between 5 and 30 characters long.";
-    }
+    if (currentText === "") textErrorMessage = "Text is required.";
+
     setErrors((oldErrors) => ({
       ...oldErrors,
       text: textErrorMessage,
@@ -102,38 +102,52 @@ const useQuestionForm = (question) => {
     event.preventDefault();
     let newQuestion = {};
 
+    if (!isOnSubmitValid(text, answears, setErrors)) return;
+
     await addQuestion({
       text,
       points,
       examId,
-    }).then(async (questionData) => {
-      newQuestion = questionData;
+    })
+      .then(async (questionData) => {
+        newQuestion = questionData;
 
-      for (let i = 0; i < answears.length; i++) {
-        await addAnswear({
-          text: answears[i].text,
-          isCorrect: answears[i].isCorrect,
-          questionId: questionData.id,
-        }).then((answearData) => {
-          newQuestion.answears.push(answearData);
-        });
-      }
+        for (let i = 0; i < answears.length; i++) {
+          await addAnswear({
+            text: answears[i].text,
+            isCorrect: answears[i].isCorrect,
+            questionId: questionData.id,
+          }).then((answearData) => {
+            newQuestion.answears.push(answearData);
+          });
+        }
 
-      setFacility((oldFacility) => ({
-        ...oldFacility,
-        exams: oldFacility.exams.map((e) =>
-          e.id === +examId
-            ? { ...e, questions: [...e.questions, newQuestion] }
-            : e
-        ),
-      }));
-    });
+        setFacility((oldFacility) => ({
+          ...oldFacility,
+          exams: oldFacility.exams.map((e) =>
+            e.id === +examId
+              ? { ...e, questions: [...e.questions, newQuestion] }
+              : e
+          ),
+        }));
 
-    navigate(`/exam/${examId}`);
+        navigate(`/exam/${examId}`);
+      })
+      .catch((error) => {
+        switch (error.statusCode) {
+          case 400:
+            setErrors((oldErrors) => ({
+              ...oldErrors,
+              text: "Question text already exists in this exam.",
+            }));
+        }
+      });
   };
 
   const handleEditOnClick = async (event) => {
     event.preventDefault();
+
+    if (!isOnSubmitValid(text, answears, setErrors)) return;
 
     answears.forEach(async (a) => {
       if (typeof a.questionId === "undefined") {
@@ -158,23 +172,33 @@ const useQuestionForm = (question) => {
     await editQuestion(id, {
       text,
       points,
-    }).then((questionData) =>
-      setFacility((oldFacility) => ({
-        ...oldFacility,
-        exams: oldFacility.exams.map((e) =>
-          e.id === +examId
-            ? {
-                ...e,
-                questions: e.questions.map((q) =>
-                  q.id === id ? questionData : q
-                ),
-              }
-            : e
-        ),
-      }))
-    );
+    })
+      .then((questionData) => {
+        setFacility((oldFacility) => ({
+          ...oldFacility,
+          exams: oldFacility.exams.map((e) =>
+            e.id === +examId
+              ? {
+                  ...e,
+                  questions: e.questions.map((q) =>
+                    q.id === id ? questionData : q
+                  ),
+                }
+              : e
+          ),
+        }));
 
-    navigate(`/exam/${examId}`);
+        navigate(`/exam/${examId}`);
+      })
+      .catch((error) => {
+        switch (error.statusCode) {
+          case 400:
+            setErrors((oldErrors) => ({
+              ...oldErrors,
+              text: "Answears successfully updated, but question text already exists in this exam.",
+            }));
+        }
+      });
   };
 
   useEffect(() => {

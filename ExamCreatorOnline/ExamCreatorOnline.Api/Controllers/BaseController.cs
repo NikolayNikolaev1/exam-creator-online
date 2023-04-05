@@ -6,14 +6,24 @@
 
     public class BaseController : ControllerBase
     {
-        private readonly IUserService userService;
+        private IUserService userService;
 
         public BaseController(IUserService userService)
         {
-            this.userService = userService;
+            this.UserService = userService;
         }
 
-        protected IUserService UserService { get; set; }
+        protected IUserService UserService 
+        { 
+            get 
+            { 
+                return this.userService; 
+            } 
+            set 
+            { 
+                this.userService = value; 
+            } 
+        }
 
         protected async Task<bool> IsUserAuthorizedAsync(int userId, Role authRole, int propertyId = -1)
         {
