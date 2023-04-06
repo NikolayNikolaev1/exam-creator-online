@@ -1,15 +1,32 @@
-import { List, ListItem } from "@mui/material";
 import { Fragment, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ButtonGroup, List, ListItem, ToggleButton } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useFacilityContext } from "../../contexts/FacilityContext";
-import "./Home.css";
 import CustomListItem from "../list-item";
+import "./Home.css";
+import useHome from "./useHome";
+
+const StyledToggleButton = styled(ToggleButton)({
+  margin: "10px",
+  color: "#03153b",
+  backgroundColor: "white",
+  "&.Mui-selected, &.Mui-selected:hover": {
+    color: "white",
+    backgroundColor: "#03153b",
+  },
+  "&:hover": {
+    color: "white",
+    backgroundColor: "#2A265F",
+  },
+});
 
 const Home = () => {
   const { facility } = useFacilityContext();
   const { name, description, exams, members } = facility;
   const { auth } = useAuthContext();
+  const { collectionType, handleCollectionChange, collection } = useHome();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,26 +53,67 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {auth.role === "Owner" && (
+        <ButtonGroup aria-label="outlined primary button group">
+          <StyledToggleButton
+            // className="owner-button"
+            selected={collectionType === "exam"}
+            value="exam"
+            onClick={(e) => handleCollectionChange(e, e.target.value)}
+          >
+            Exams
+          </StyledToggleButton>
+          <StyledToggleButton
+            // className="owner-button"
+            selected={collectionType === "lecturer"}
+            value="lecturer"
+            onClick={(e) => handleCollectionChange(e, e.target.value)}
+          >
+            Lecturers
+          </StyledToggleButton>
+          <StyledToggleButton
+            // className="owner-button"
+            selected={collectionType === "student"}
+            value="student"
+            onClick={(e) => handleCollectionChange(e, e.target.value)}
+          >
+            Students
+          </StyledToggleButton>
+        </ButtonGroup>
+      )}
+
       <List>
-        {exams?.map((e) => (
-          <ListItem key={e.id}>
-            <CustomListItem
-              resource={"Exam"}
-              header={e.name}
-              contentHeader={`Lecturer: ${
-                members
-                  .filter((m) => m.id === e.lecturerId)
-                  .map((m) => `${m.firstName} ${m.lastName}`)[0]
-              }`}
-              contentText={e.description}
-              buttons={[
-                <Link to={`/exam/${e.id}`}>
-                  <button className="btn">Details</button>
-                </Link>,
-              ]}
-            />
-          </ListItem>
-        ))}
+        {collectionType === "exam"
+          ? exams?.map((e) => (
+              <ListItem key={e.id}>
+                <CustomListItem
+                  resource={"Exam"}
+                  header={e.name}
+                  contentHeader={`Lecturer: ${
+                    members
+                      .filter((m) => m.id === e.lecturerId)
+                      .map((m) => `${m.firstName} ${m.lastName}`)[0]
+                  }`}
+                  contentText={e.description}
+                  buttons={[
+                    <Link to={`/exam/${e.id}`}>
+                      <button className="btn">Details</button>
+                    </Link>,
+                  ]}
+                />
+              </ListItem>
+            ))
+          : collection?.map((c) => (
+              <ListItem key={c.id}>
+                <CustomListItem
+                  resource={collectionType}
+                  header={`${c.firstName} ${c.lastName}`}
+                  contentHeader="Email: "
+                  contentText={c.email}
+                />
+              </ListItem>
+            ))}
       </List>
     </Fragment>
   );
