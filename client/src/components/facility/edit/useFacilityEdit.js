@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../../contexts/AuthContext";
-import { editFacility, getFacility } from "../../../services/facilityService";
+import { editFacility } from "../../../services/facilityService";
+import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const useFacilityEdit = () => {
   const { facilityId } = useParams();
   const { auth } = useAuthContext();
+  const { facility } = useFacilityContext();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({
     name: "",
     description: "",
   });
+  const navigate = useNavigate();
 
   const handleNameChange = (event) => {
     event.preventDefault();
@@ -50,13 +53,19 @@ const useFacilityEdit = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      await getFacility(facilityId).then((response) => {
-        setName(response.name);
-        setDescription(response.description);
-      });
-    })();
-  }, [facilityId]);
+    if (typeof auth.id === "undefined") {
+      navigate("/login");
+      return;
+    }
+
+    if (auth.id !== facility.members.find((m) => m.role === "Owner").id) {
+      navigate("/");
+      return;
+    }
+
+    setName(facility.name);
+    setDescription(facility.description);
+  }, [auth, facilityId]);
 
   return {
     name,

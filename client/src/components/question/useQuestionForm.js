@@ -8,9 +8,11 @@ import {
 import { addQuestion, editQuestion } from "../../services/questionService";
 import { useFacilityContext } from "../../contexts/FacilityContext";
 import { isOnSubmitValid } from "./questionHelpers";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 const useQuestionForm = (question) => {
   const navigate = useNavigate();
+  const { auth } = useAuthContext();
   const { setFacility } = useFacilityContext();
   const { examId } = useParams();
   const [id, setId] = useState(0);
@@ -200,6 +202,12 @@ const useQuestionForm = (question) => {
         }
       });
   };
+
+  useEffect(() => {
+    if (auth.role !== "Lecturer") {
+      navigate("/");
+    }
+  }, [auth]);
 
   useEffect(() => {
     if (typeof question?.id === "undefined") return;

@@ -14,17 +14,16 @@ const FacilityOwner = () => {
   } = useFacilityOwner();
 
   return (
-    <div className="get-started" id="login-screen">
-      <p className="get-started-title">
-        Exam <span className="login-p-subtitle">Online</span>
+    <div className="form-wrapper">
+      <p className="form-title">
+        Exam <span className="form-p-subtitle">Online</span>
       </p>
 
       <input
         type="text"
         name="email"
-        id="email"
         placeholder="Email"
-        className="login-form"
+        className="form-input legacy"
         value={email}
         onChange={handleEmailChange}
       />
@@ -32,8 +31,7 @@ const FacilityOwner = () => {
       <input
         type="password"
         name="password"
-        id="password"
-        className="login-form"
+        className="form-input legacy"
         placeholder="Pasword"
         vvaluealie={password}
         onChange={handlePasswordChange}
@@ -42,14 +40,13 @@ const FacilityOwner = () => {
       <input
         type="text"
         name="facility-name"
-        id="facility-name"
-        className="login-form"
+        className="form-input legacy"
         placeholder="Facility Name"
         value={facilityName}
         onChange={handleFacilityNameChange}
       />
 
-      {error !== "" && <h5>{error}</h5>}
+      {error !== "" && <h5 className="warning">{error}</h5>}
       {successMeessage !== "" && (
         <h4 style={{ color: "green" }}>{successMeessage}</h4>
       )}
@@ -57,7 +54,7 @@ const FacilityOwner = () => {
       <input
         type="button"
         value="Create Facility Owner"
-        className="login-btn"
+        className="form-btn"
         onClick={handleFacilityCreateOnClick}
       />
     </div>

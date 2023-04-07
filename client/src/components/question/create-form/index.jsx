@@ -29,98 +29,90 @@ const QuestionCreate = () => {
   } = useQuestionForm();
 
   return (
-    <Container maxWidth="sm" sx={{ mb: 4 }}>
-      <Typography variant="h2">Create Question</Typography>
-      <FormControl
-        sx={{
-          "& .MuiTextField-root": { m: 1 },
-        }}
-      >
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={9}>
-            <TextField
-              id="text"
-              label="Text"
-              variant="outlined"
-              value={text}
-              onChange={handleTextChange}
-              fullWidth
-            />
-            {errors.text && (
-              <FormHelperText error>{errors.text}</FormHelperText>
-            )}
-          </Grid>
-
-          <Grid item xs={3}>
-            <TextField
-              id="points"
-              label="Points"
-              type="number"
-              variant="outlined"
-              value={points}
-              onChange={handlePointsChange}
-            />
-            {errors.points && (
-              <FormHelperText error>{errors.points}</FormHelperText>
-            )}
-          </Grid>
-          <FormLabel>Answears: </FormLabel>
-
-          {errors.answears && (
-            <FormHelperText error>{errors.answears}</FormHelperText>
-          )}
-          <Grid item xs={12}>
-            <List>
-              {answears.map((a, i) => (
-                <ListItem key={a.id}>
-                  <AnswearForm
-                    clientId={a.id}
-                    text={a.text}
-                    isCorrect={a.isCorrect}
-                    handleAnswearOnChange={handleAnswearOnChange}
-                  />
-                  {answears.length > 1 && (
-                    <Button
-                      variant="outlined"
-                      startIcon={<ControlPointRounded />}
-                      onClick={() => handleRemoveAnswearClick(a.id)}
-                    >
-                      Remove Answear
-                    </Button>
-                  )}
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-
-          <Grid item xs={6}>
-            <Button
-              variant="outlined"
-              startIcon={<ControlPointRounded />}
-              fullWidth
-              onClick={handleAddAnswearClick}
-            >
-              Add an answear
-            </Button>
-          </Grid>
-
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              disabled={
-                typeof Object.values(errors).find(
-                  (e) => e !== "" && !e.startsWith("Answear")
-                ) !== "undefined"
-              }
-              fullWidth
-              onClick={handleAddOnClick}
-            >
-              Create Question
-            </Button>
-          </Grid>
+    <div className="form-wrapper">
+      <p className="form-title">
+        Create <span className="form-p-subtitle">Question</span>
+      </p>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={9}>
+          <TextField
+            label="Text"
+            variant="outlined"
+            value={text}
+            onChange={handleTextChange}
+            fullWidth
+          />
+          {errors.text && <FormHelperText error>{errors.text}</FormHelperText>}
         </Grid>
-      </FormControl>
-    </Container>
+
+        <Grid item xs={3}>
+          <TextField
+            label="Points"
+            type="number"
+            variant="outlined"
+            value={points}
+            onChange={handlePointsChange}
+          />
+          {errors.points && (
+            <FormHelperText className="error-msg" error>
+              {errors.points}
+            </FormHelperText>
+          )}
+        </Grid>
+        <p>Answears : </p>
+
+        {errors.answears && (
+          <FormHelperText error>{errors.answears}</FormHelperText>
+        )}
+        <Grid item xs={12}>
+          <List>
+            {answears.map((a, i) => (
+              <ListItem key={a.id}>
+                <AnswearForm
+                  clientId={a.id}
+                  text={a.text}
+                  isCorrect={a.isCorrect}
+                  handleAnswearOnChange={handleAnswearOnChange}
+                />
+                {answears.length > 1 && (
+                  <Button
+                    className="delete-btn"
+                    variant="outlined"
+                    onClick={() => handleRemoveAnswearClick(a.id)}
+                  >
+                    X
+                  </Button>
+                )}
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
+
+        <Button
+          className="form-btn-secondary"
+          variant="outlined"
+          startIcon={<ControlPointRounded />}
+          fullWidth
+          onClick={handleAddAnswearClick}
+        >
+          Add an answear
+        </Button>
+
+        <Button
+          className="form-btn"
+          variant="contained"
+          disabled={
+            typeof Object.values(errors).find(
+              (e) => e !== "" && !e.startsWith(" ")
+            ) !== "undefined"
+          }
+          fullWidth
+          onClick={handleAddOnClick}
+        >
+          Create
+        </Button>
+      </Grid>
+    </div>
   );
 };
 

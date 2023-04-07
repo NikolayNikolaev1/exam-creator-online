@@ -31,7 +31,7 @@ export const isOnSubmitValid = (text, answears, setErrors) => {
   ) {
     setErrors((oldErrors) => ({
       ...oldErrors,
-      answears: "Answear texts must be between 5 and 30 characters long.",
+      answears: " texts must be between 5 and 30 characters long.",
     }));
 
     return false;
@@ -40,7 +40,7 @@ export const isOnSubmitValid = (text, answears, setErrors) => {
   if (typeof answears.find((a) => a.isCorrect) === "undefined") {
     setErrors((oldErrors) => ({
       ...oldErrors,
-      answears: "Answears must have atleast one correct one in a question.",
+      answears: " must have atleast one correct one in a question.",
     }));
 
     return false;
@@ -49,7 +49,7 @@ export const isOnSubmitValid = (text, answears, setErrors) => {
   if (answears.length < 2) {
     setErrors((oldErrors) => ({
       ...oldErrors,
-      answears: "Answears count must be atleast 2 in a question.",
+      answears: " count must be atleast 2 in a question.",
     }));
 
     return false;
@@ -60,7 +60,7 @@ export const isOnSubmitValid = (text, answears, setErrors) => {
   if (asnwearTexts.some((t, i) => asnwearTexts.indexOf(t) != i)) {
     setErrors((oldErrors) => ({
       ...oldErrors,
-      answears: "Answear texts must be unique in a question.",
+      answears: " texts must be unique in a question.",
     }));
 
     return false;

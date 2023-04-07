@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import "./Form.css";
 import AnswearForm from "./components/answear/";
 import ExamCreate from "./components/exam/create-form";
 import ExamDetails from "./components/exam/details";

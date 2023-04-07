@@ -7,17 +7,14 @@ import {
   TextField,
 } from "@mui/material";
 import useAnswear from "./useAnswear";
+import { Fragment } from "react";
 
 const AnswearForm = ({ clientId, handleAnswearOnChange, ...props }) => {
   const { text, handleTextChange, isCorrect, handleIsCorrectChange, errors } =
     useAnswear(clientId, props.text, props.isCorrect, handleAnswearOnChange);
 
   return (
-    <FormControl
-      sx={{
-        "& .MuiTextField-root": { m: 1 },
-      }}
-    >
+    <Fragment>
       <Grid container spacing={4} justifyContent="center">
         <Grid item xs={8}>
           <TextField
@@ -42,7 +39,7 @@ const AnswearForm = ({ clientId, handleAnswearOnChange, ...props }) => {
       </Grid>
 
       {errors.text && <FormHelperText error>{errors.text}</FormHelperText>}
-    </FormControl>
+    </Fragment>
   );
 };
 

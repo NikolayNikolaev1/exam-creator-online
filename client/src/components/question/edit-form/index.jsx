@@ -6,6 +6,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Grid,
   List,
   ListItem,
   TextField,
@@ -41,70 +42,79 @@ const QuestionEdit = () => {
   }, [questionId]);
 
   return (
-    <FormControl
-      sx={{
-        "& .MuiTextField-root": { m: 1, width: "25ch" },
-      }}
-    >
-      <TextField
-        id="text"
-        label="Text"
-        variant="outlined"
-        value={text}
-        onChange={handleTextChange}
-      />
-      {errors.text && <FormHelperText error>{errors.text}</FormHelperText>}
-      <TextField
-        id="points"
-        label="Points"
-        type="number"
-        variant="outlined"
-        value={points}
-        onChange={handlePointsChange}
-      />
-      {errors.points && <FormHelperText error>{errors.points}</FormHelperText>}
-      <FormLabel>Answears: </FormLabel>
+    <div className="form-wrapper">
+      <p className="form-title">
+        Edit <span className="form-p-subtitle">Question</span>
+      </p>
 
-      {errors.answears && (
-        <FormHelperText error>{errors.answears}</FormHelperText>
-      )}
-      <List>
-        {answears.map((a, i) => (
-          <ListItem key={a.id}>
-            <AnswearForm
-              clientId={a.id}
-              text={a.text}
-              isCorrect={a.isCorrect}
-              handleAnswearOnChange={handleAnswearOnChange}
-            />
-            {answears.length > 1 && (
-              <Button
-                variant="outlined"
-                startIcon={<ControlPointRounded />}
-                onClick={() => handleRemoveAnswearClick(a.id)}
-              >
-                Remove Answear
-              </Button>
-            )}
-          </ListItem>
-        ))}
-      </List>
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={9}>
+          <TextField
+            label="Text"
+            variant="outlined"
+            value={text}
+            onChange={handleTextChange}
+          />
+          {errors.text && <FormHelperText error>{errors.text}</FormHelperText>}
+        </Grid>
 
-      <Button
-        variant="outlined"
-        startIcon={<ControlPointRounded />}
-        onClick={handleAddAnswearClick}
-      >
-        Add an answear
-      </Button>
+        <Grid item xs={3}>
+          <TextField
+            label="Points"
+            type="number"
+            variant="outlined"
+            value={points}
+            onChange={handlePointsChange}
+          />
+          {errors.points && (
+            <FormHelperText error>{errors.points}</FormHelperText>
+          )}
+        </Grid>
+        <p>Answears : </p>
 
-      <Button
-        disabled={Object.values(errors).filter((e) => e !== "").length > 0}
-        onClick={handleEditOnClick}
-      >
-        Save changes
-      </Button>
-    </FormControl>
+        {errors.answears && (
+          <FormHelperText error>{errors.answears}</FormHelperText>
+        )}
+        <List>
+          {answears.map((a, i) => (
+            <ListItem key={a.id}>
+              <AnswearForm
+                clientId={a.id}
+                text={a.text}
+                isCorrect={a.isCorrect}
+                handleAnswearOnChange={handleAnswearOnChange}
+              />
+              {answears.length > 1 && (
+                <Button
+                  className="delete-btn"
+                  variant="outlined"
+                  onClick={() => handleRemoveAnswearClick(a.id)}
+                >
+                  X
+                </Button>
+              )}
+            </ListItem>
+          ))}
+        </List>
+
+        <Button
+          className="form-btn-secondary"
+          variant="outlined"
+          startIcon={<ControlPointRounded />}
+          onClick={handleAddAnswearClick}
+        >
+          Add an answear
+        </Button>
+
+        <Button
+          className="form-btn"
+          disabled={Object.values(errors).filter((e) => e !== "").length > 0}
+          onClick={handleEditOnClick}
+        >
+          Save changes
+        </Button>
+      </Grid>
+    </div>
   );
 };
 

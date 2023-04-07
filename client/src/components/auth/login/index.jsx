@@ -1,4 +1,3 @@
-import "../Auth.css";
 import useLogin from "./useLogin";
 
 const Login = () => {
@@ -12,25 +11,23 @@ const Login = () => {
   } = useLogin();
 
   return (
-    <div className="get-started" id="login-screen">
-      <p className="get-started-title">
-        Exam <span className="login-p-subtitle">Online</span>
+    <div className="form-wrapper">
+      <p className="form-title">
+        Exam <span className="form-p-subtitle">Online</span>
       </p>
 
       <input
         type="text"
         name="email"
-        id="email"
         placeholder="Email"
-        className="login-form"
+        className="form-input legacy"
         value={email}
         onChange={handleEmailChange}
       />
       <input
         type="password"
         name="password"
-        id="password"
-        className="login-form"
+        className="form-input legacy"
         placeholder="Pasword"
         value={password}
         onChange={handlePasswordChange}
@@ -41,7 +38,7 @@ const Login = () => {
       <input
         type="button"
         value="Login"
-        className="login-btn"
+        className="form-btn"
         onClick={handleLoginOnClick}
       />
     </div>
