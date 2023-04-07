@@ -33,7 +33,7 @@ export const FacilityProvider = ({ children }) => {
     }
 
     (async () => await fetchFacilityData())();
-  }, [auth]);
+  }, [auth.id]);
 
   return (
     <FacilityContext.Provider

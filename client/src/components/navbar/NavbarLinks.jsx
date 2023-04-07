@@ -21,6 +21,10 @@ const Logout = () => {
   );
 };
 
+const EditProfile = () => {
+  return <Button color="inherit" component={Link} to="/profile/edit"></Button>;
+};
+
 const NavbarLinks = () => {
   const { auth } = useAuthContext();
 
@@ -58,6 +62,10 @@ const NavbarLinks = () => {
           <Button color="inherit" component={Link} to="/exam/create">
             Create Exam
           </Button>
+          Welcome
+          <Button color="inherit" component={Link} to="/profile/edit">
+            {auth.email}
+          </Button>
           <Logout />
         </Fragment>
       );
@@ -65,6 +73,10 @@ const NavbarLinks = () => {
     case "Student":
       return (
         <Fragment>
+          Welcome
+          <Button color="inherit" component={Link} to="/profile/edit">
+            {auth.email}
+          </Button>
           <Logout />
         </Fragment>
       );

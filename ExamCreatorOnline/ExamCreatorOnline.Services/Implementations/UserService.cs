@@ -78,5 +78,14 @@
         public async Task<bool> IsFacilityOwnerAsync(int userId, int facilityId)
             => await this.dbContext
                 .Users.AnyAsync(u => u.Id == userId && u.FacilityId == facilityId);
+
+        public async Task UpdateAsync(int id, UserUpdatingDTO userDTO)
+        {
+            User user = await this.dbContext.Users.FirstAsync(u => u.Id == id);
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

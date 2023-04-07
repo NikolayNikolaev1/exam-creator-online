@@ -16,6 +16,7 @@ const Register = () => {
     handleRoleOnChange,
     error,
     handleRegisterOnClick,
+    successMeessage,
   } = useRegister();
   return (
     <div className="get-started" id="login-screen">
@@ -74,6 +75,7 @@ const Register = () => {
         <FormControlLabel value="student" control={<Radio />} label="Student" />
       </RadioGroup>
       {error !== "" && <h5>{error}</h5>}
+      {successMeessage !== "" && <h4 style={{ color: "green" }}></h4>}
       <input
         type="button"
         value="Register User"

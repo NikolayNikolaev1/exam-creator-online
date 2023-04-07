@@ -1,6 +1,7 @@
 ﻿namespace ExamCreatorOnline.Api.Controllers
 {
     using Data.Models;
+    using ExamCreatorOnline.Services.DTO.Questions;
     using Microsoft.AspNetCore.Mvc;
     using Services;
     using Services.DTO.Users;
@@ -81,6 +82,32 @@
             {
                 return NotFound(id);
             }
+
+            return Ok(await this.userService.FindByIdAsync(id));
+        }
+
+
+        [HttpPut()]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Update([FromBody] UserUpdatingDTO userDTO)
+        {
+            int id = userDTO.UserId;
+
+            if (!await this.userService.ExistsIdAsync(id))
+            {
+                return NotFound(id);
+            }
+
+            UserDTO user = await this.userService.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return BadRequest(user);
+            }
+
+            await this.userService.UpdateAsync(id, userDTO);
 
             return Ok(await this.userService.FindByIdAsync(id));
         }

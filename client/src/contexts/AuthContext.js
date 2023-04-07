@@ -8,13 +8,13 @@ export const AuthProvider = ({ children }) => {
 
   const onLogin = async (credentials) => {
     await login(credentials)
-      .then((response) => {
+      .then((credentialsData) => {
         setAuth({
-          id: response.id,
-          email: response.email,
-          name: response.firstName + " " + response.lastName,
-          role: response.role,
-          facilityId: response.facilityId,
+          id: credentialsData.id,
+          email: credentialsData.email,
+          name: credentialsData.firstName + " " + credentialsData.lastName,
+          role: credentialsData.role,
+          facilityId: credentialsData.facilityId,
         });
       })
       .catch((error) => {
@@ -29,12 +29,20 @@ export const AuthProvider = ({ children }) => {
       });
   };
 
+  const handleNameChange = (firstName, lastName) => {
+    setAuth((oldAuth) => ({
+      ...oldAuth,
+      name: firstName + " " + lastName,
+    }));
+  };
+
   const onLogout = () => setAuth({});
 
   const contextValues = {
     auth,
     onLogin,
     onLogout,
+    handleNameChange,
   };
 
   return (

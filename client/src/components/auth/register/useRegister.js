@@ -12,6 +12,7 @@ const useRegister = () => {
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState("lecturer");
   const [error, setError] = useState("");
+  const [successMeessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
@@ -49,13 +50,20 @@ const useRegister = () => {
       roleId: role === "lecturer" ? 2 : 3,
       facilityId: auth.facilityId,
       creatorId: auth.id,
-    }).catch((error) => {
-      switch (error.statusCode) {
-        case 400:
-          setError(`User with email '${email}' already exists.`);
-          break;
-      }
-    });
+    })
+      .then(() => {
+        setError("");
+        setSuccessMessage(
+          `Successfully create a ${role} account with email: ${email}.`
+        );
+      })
+      .catch((error) => {
+        switch (error.statusCode) {
+          case 400:
+            setError(`User with email '${email}' already exists.`);
+            break;
+        }
+      });
   };
 
   useEffect(() => {
@@ -77,6 +85,7 @@ const useRegister = () => {
     handleRoleOnChange,
     error,
     handleRegisterOnClick,
+    successMeessage,
   };
 };
 

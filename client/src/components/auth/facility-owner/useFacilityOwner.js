@@ -10,6 +10,7 @@ const useFacilityOwner = () => {
     useAuth();
   const [facilityName, setFacilityNmae] = useState("");
   const [error, setError] = useState("");
+  const [successMeessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleFacilityNameChange = (event) => {
@@ -45,6 +46,9 @@ const useFacilityOwner = () => {
     })
       .then(() => {
         setError("");
+        setSuccessMessage(
+          `Successfully created an owner account with email: ${email}.`
+        );
       })
       .catch((error) => {
         switch (error.statusCode) {
@@ -70,6 +74,7 @@ const useFacilityOwner = () => {
     handleFacilityNameChange,
     error,
     handleFacilityCreateOnClick,
+    successMeessage,
   };
 };
 

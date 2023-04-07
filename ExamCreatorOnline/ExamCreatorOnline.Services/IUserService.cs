@@ -20,5 +20,7 @@
         Task<bool> IsFacilityOwnerAsync(int userId, int facilityId);
 
         Task<UserDTO> LoginAsync(UserLogingDTO userDTO);
+
+        Task UpdateAsync(int id, UserUpdatingDTO userDTO);
     }
 }

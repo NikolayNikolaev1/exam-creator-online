@@ -10,6 +10,7 @@ const FacilityOwner = () => {
     handleFacilityNameChange,
     error,
     handleFacilityCreateOnClick,
+    successMeessage,
   } = useFacilityOwner();
 
   return (
@@ -49,6 +50,9 @@ const FacilityOwner = () => {
       />
 
       {error !== "" && <h5>{error}</h5>}
+      {successMeessage !== "" && (
+        <h4 style={{ color: "green" }}>{successMeessage}</h4>
+      )}
 
       <input
         type="button"

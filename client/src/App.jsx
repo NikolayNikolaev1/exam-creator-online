@@ -14,6 +14,7 @@ import Navbar from "./components/navbar";
 import FacilityEdit from "./components/facility/edit";
 import { FacilityProvider } from "./contexts/FacilityContext";
 import Home from "./components/home";
+import ProfileEdit from "./components/profile/edit";
 
 const App = () => (
   <AuthProvider>
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/facility/create" element={<FacilityOwner />} />
           <Route path="/facility/:facilityId/edit" element={<FacilityEdit />} />
+          <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/exam/create" element={<ExamCreate />} />
           <Route path="/exam/:examId" element={<ExamDetails />} />
           <Route path="/exam/:examId/edit" element={<ExamEdit />} />
