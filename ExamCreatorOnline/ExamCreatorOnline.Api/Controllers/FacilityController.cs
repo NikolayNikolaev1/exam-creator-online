@@ -86,7 +86,10 @@
 
             await this.facilityService.UpdateAsync(id, facilityDTO);
 
-            return Ok();
+            return Ok(new {
+                Name = facilityDTO.Name,
+                Description = facilityDTO.Description
+            });
         }
     }
 }

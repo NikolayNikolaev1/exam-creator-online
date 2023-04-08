@@ -124,10 +124,7 @@
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
 
-            await this.examService.AddStudentsAsync(id, dto.StudentIds);
-
-
-            return Ok(await this.examService.AllStudentIdsAsync(id));
+            return Ok(await this.examService.AddStudentsAsync(id, dto.StudentIds));
         }
 
         [HttpPut("~/api/Exam/{id:int}/StudentRemove")]
@@ -152,10 +149,7 @@
                 return StatusCode(StatusCodes.Status401Unauthorized);
             }
 
-            await this.examService.RemoveStudentsAsync(id, dto.StudentIds);
-
-
-            return Ok(await this.examService.AllStudentIdsAsync(id));
+            return Ok(await this.examService.RemoveStudentsAsync(id, dto.StudentIds));
         }
 
         [HttpDelete("{id:int}")]

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuthContext } from "../../../contexts/AuthContext";
 import { createFacilityOwner } from "../../../services/facilityService";
 import useAuth from "../useAuth";
@@ -11,7 +10,6 @@ const useFacilityOwner = () => {
   const [facilityName, setFacilityNmae] = useState("");
   const [error, setError] = useState("");
   const [successMeessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleFacilityNameChange = (event) => {
     event.preventDefault();
@@ -22,6 +20,9 @@ const useFacilityOwner = () => {
 
   const handleFacilityCreateOnClick = async (event) => {
     event.preventDefault();
+
+    setError("");
+    setSuccessMessage("");
 
     if ([email, password, facilityName].includes("")) {
       setError("All fields are required.");
@@ -42,10 +43,13 @@ const useFacilityOwner = () => {
       email,
       password,
       name: facilityName,
+      description:
+        "Example Description - Please change it before using the facility.",
+      firstName: "Facility",
+      lastName: "Owner",
       adminId: auth.id,
     })
       .then(() => {
-        setError("");
         setSuccessMessage(
           `Successfully created an owner account with email: ${email}.`
         );
@@ -55,15 +59,12 @@ const useFacilityOwner = () => {
           case 400:
             setError(`User with email '${email}' already exists.`);
             break;
+          default:
+            setError("Server error.");
+            break;
         }
       });
   };
-
-  useEffect(() => {
-    if (auth.role !== "Admin") {
-      navigate("/");
-    }
-  }, [auth]);
 
   return {
     email,

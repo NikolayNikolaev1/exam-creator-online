@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../contexts/AuthContext";
 import useAuth from "../useAuth";
@@ -7,7 +7,7 @@ const useLogin = () => {
   const { email, handleEmailChange, password, handlePasswordChange } =
     useAuth();
   const [error, setError] = useState("");
-  const { auth, onLogin } = useAuthContext();
+  const { onLogin } = useAuthContext();
   const navigate = useNavigate();
 
   const handleLoginOnClick = async (event) => {
@@ -23,12 +23,6 @@ const useLogin = () => {
       .then(() => navigate("/"))
       .catch((error) => setError(error));
   };
-
-  useEffect(() => {
-    if (typeof auth.id !== "undefined") {
-      navigate("/");
-    }
-  }, [auth]);
 
   return {
     email,

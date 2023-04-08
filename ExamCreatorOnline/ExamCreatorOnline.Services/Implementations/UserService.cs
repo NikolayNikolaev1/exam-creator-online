@@ -24,6 +24,8 @@
             {
                 Email = userDTO.Email,
                 Password = userDTO.Password,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
                 Role = (Role)userDTO.RoleId,
                 FacilityId = userDTO.FacilityId
             };

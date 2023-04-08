@@ -4,7 +4,7 @@
 
     public interface IExamService
     {
-        Task AddStudentsAsync(int examId, IEnumerable<int> studentIds);
+        Task<IEnumerable<int>> AddStudentsAsync(int examId, IEnumerable<int> studentIds);
 
         Task<IEnumerable<ExamDTO>> AllAsync();
 
@@ -20,7 +20,7 @@
 
         Task<ExamDTO> FindByIdAsync(int id);
 
-        Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
+        Task<IEnumerable<int>> RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
 
         Task UpdateAsync(int id, ExamUpdatingDTO examDTO);
     }

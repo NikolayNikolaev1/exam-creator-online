@@ -16,6 +16,7 @@ const useExamDetails = (examId) => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [showAddStudents, setShowAddStudents] = useState(false);
   const [showRemoveStudents, setShowRemoveStudents] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSelectedStudentsOnChange = (event, students) => {
@@ -55,22 +56,22 @@ const useExamDetails = (examId) => {
       await addStudents(examId, {
         studentIds: selectedStudents.map((s) => s.id),
         lecturerId: auth.id,
-      }).then((response) =>
+      }).then((studentIdsData) => {
         setExam((oldExam) => ({
           ...oldExam,
-          studentIds: response,
-        }))
-      );
+          studentIds: studentIdsData,
+        }));
+      });
 
       setShowAddStudents(false);
     } else {
       await removeStudents(examId, {
         studentIds: selectedStudents.map((s) => s.id),
         lecturerId: auth.id,
-      }).then((response) => {
+      }).then((studentIdsData) => {
         setExam((oldExam) => ({
           ...oldExam,
-          studentIds: response,
+          studentIds: studentIdsData,
         }));
       });
 
@@ -83,13 +84,18 @@ const useExamDetails = (examId) => {
   const handleExamDeleteOnClick = async (event) => {
     event.preventDefault();
 
-    await deleteExam(examId).then(() => {
-      setFacility((oldFacility) => ({
-        ...oldFacility,
-        exams: oldFacility.exams.filter((e) => e.id != examId),
-      }));
-      navigate("/");
-    });
+    await deleteExam(examId)
+      .then(() => {
+        setFacility((oldFacility) => ({
+          ...oldFacility,
+          exams: oldFacility.exams.filter((e) => e.id != examId),
+        }));
+
+        navigate("/");
+      })
+      .catch(() =>
+        setErrorMessage("Please remove all students before deleting the exam.")
+      );
   };
 
   useEffect(() => {
@@ -98,6 +104,7 @@ const useExamDetails = (examId) => {
   }, [examId]);
 
   useEffect(() => {
+    // Update after student change.
     if (typeof exam.id === "undefined") return;
     setFacility((oldFacility) => ({
       ...oldFacility,
@@ -116,6 +123,7 @@ const useExamDetails = (examId) => {
     handleSelectedStudentsOnChange,
     handleQuestionDeleteOnClick,
     handleExamDeleteOnClick,
+    errorMessage,
   };
 };
 

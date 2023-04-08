@@ -46,9 +46,9 @@ const FacilityOwner = () => {
         onChange={handleFacilityNameChange}
       />
 
-      {error !== "" && <h5 className="warning">{error}</h5>}
+      {error !== "" && <h5 className="error-msg">{error}</h5>}
       {successMeessage !== "" && (
-        <h4 style={{ color: "green" }}>{successMeessage}</h4>
+        <h5 className="success-msg">{successMeessage}</h5>
       )}
 
       <input

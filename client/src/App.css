@@ -10,6 +10,7 @@
 
 
 .floating-btn {
+  text-decoration: none;
   border-radius: 26.5px;
   background-color: #001F61;
   border: 1px solid #001F61;

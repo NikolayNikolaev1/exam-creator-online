@@ -18,16 +18,18 @@
             this.mapper = mapper;
         }
 
-        public async Task AddStudentsAsync(int examId, IEnumerable<int> studentIds)
+        public async Task<IEnumerable<int>> AddStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
-            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
-
             foreach (int studentId in studentIds)
             {
                 await this.dbContext.AddAsync(new StudentExam { ExamId = examId, StudentId = studentId });
             }
 
             this.dbContext.SaveChanges();
+
+            var exam = this.dbContext.StudentsExams.Where(se => se.ExamId == examId);
+
+            return exam.Select(s => s.StudentId).ToList();
         }
 
         public async Task<IEnumerable<ExamDTO>> AllAsync()
@@ -86,7 +88,7 @@
             .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)
             .FirstAsync(e => e.Id == id);
 
-        public async Task RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)
+        public async Task<IEnumerable<int>> RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
             foreach (StudentExam se in this.dbContext.StudentsExams)
             {
@@ -97,6 +99,10 @@
             }
 
             await this.dbContext.SaveChangesAsync();
+
+            Exam exam = await this.dbContext.Exams.FirstAsync(e => e.Id == examId);
+
+            return exam.Students.Select(s => s.StudentId).ToList();
         }
 
         public async Task UpdateAsync(int id, ExamUpdatingDTO examDTO)

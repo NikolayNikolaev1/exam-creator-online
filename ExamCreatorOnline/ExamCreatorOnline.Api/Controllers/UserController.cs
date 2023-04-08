@@ -40,7 +40,7 @@
         }
 
         [HttpPost("~/api/Register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Register([FromBody] UserRegisteringDTO userDTO)
@@ -69,7 +69,7 @@
 
             int userId = await this.userService.CreateUserAsync(userDTO);
 
-            return CreatedAtRoute("GetUser", new { id = userId }, userDTO);
+            return Ok(await this.userService.FindByIdAsync(userId));
         }
 
         [HttpGet("{id:int}", Name = "GetUser")]

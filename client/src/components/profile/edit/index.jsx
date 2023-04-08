@@ -11,17 +11,16 @@ const ProfileEdit = () => {
   } = useProfileEdit();
 
   return (
-    <div className="get-started" id="login-screen">
-      <p className="get-started-title">
-        Profile <span className="login-p-subtitle">Edit</span>
+    <div className="form-wrapper">
+      <p className="form-title">
+        Profile <span className="form-p-subtitle">Edit</span>
       </p>
 
       <input
         type="text"
         name="first-name"
-        id="first-name"
         placeholder="First Name"
-        className="login-form"
+        className="form-input legacy"
         value={firstName}
         onChange={handleFirstNameOnChange}
       />
@@ -29,7 +28,7 @@ const ProfileEdit = () => {
         type="text"
         name="last-name"
         id="last-name"
-        className="login-form"
+        className="form-input legacy"
         placeholder="Last Name"
         value={lastName}
         onChange={handleLastNameOnChange}
@@ -42,7 +41,7 @@ const ProfileEdit = () => {
       <input
         type="button"
         value="Edit"
-        className="login-btn"
+        className="form-btn"
         onClick={handleEditOnClick}
       />
     </div>

@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import "./Form.css";
-import AnswearForm from "./components/answear/";
 import ExamCreate from "./components/exam/create-form";
 import ExamDetails from "./components/exam/details";
 import ExamEdit from "./components/exam/edit-form";
@@ -16,6 +15,8 @@ import FacilityEdit from "./components/facility/edit";
 import { FacilityProvider } from "./contexts/FacilityContext";
 import Home from "./components/home";
 import ProfileEdit from "./components/profile/edit";
+import RouteGuard from "./components/common/RouteGuard";
+import NotFound from "./components/not-found";
 
 const App = () => (
   <AuthProvider>
@@ -25,40 +26,110 @@ const App = () => (
       </header>
       <main className="App">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/facility/create" element={<FacilityOwner />} />
-          <Route path="/facility/:facilityId/edit" element={<FacilityEdit />} />
-          <Route path="/profile/edit" element={<ProfileEdit />} />
-          <Route path="/exam/create" element={<ExamCreate />} />
-          <Route path="/exam/:examId" element={<ExamDetails />} />
-          <Route path="/exam/:examId/edit" element={<ExamEdit />} />
+          <Route
+            path="/"
+            element={
+              <RouteGuard>
+                <Home />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RouteGuard role="Guest">
+                <Login />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <RouteGuard role="Owner">
+                <Register />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/facility/create"
+            element={
+              <RouteGuard role="Admin">
+                <FacilityOwner />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/facility/:facilityId/edit"
+            element={
+              <RouteGuard role="Owner" resource="Facility">
+                <FacilityEdit />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/profile/edit"
+            element={
+              <RouteGuard>
+                <ProfileEdit />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/exam/create"
+            element={
+              <RouteGuard role="Lecturer">
+                <ExamCreate />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/exam/:examId"
+            element={
+              <RouteGuard resource="Exam">
+                <ExamDetails />
+              </RouteGuard>
+            }
+          />
+          <Route
+            path="/exam/:examId/edit"
+            element={
+              <RouteGuard role="Lecturer" resource="Exam">
+                <ExamEdit />
+              </RouteGuard>
+            }
+          />
           <Route
             path="/exam/:examId/question/create"
-            element={<QuestionCreate />}
+            element={
+              <RouteGuard role="Lecturer" resource="Exam">
+                <QuestionCreate />
+              </RouteGuard>
+            }
           />
           <Route
             path="/exam/:examId/question/:questionId/edit"
-            element={<QuestionEdit />}
+            element={
+              <RouteGuard role="Lecturer" resource="Question">
+                <QuestionEdit />
+              </RouteGuard>
+            }
           />
-          <Route
-            path="/exam/:examId/question/:questionId/answear/create"
-            element={<AnswearForm />}
-          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <footer>
           <div className="floating-text">
             Part of{" "}
-            <a
-              href="https://florin-pop.com/blog/2019/09/100-days-100-projects"
-              target="_blank"
-            >
-              #100Days100Projects
+            <a href="https://github.com/NikolayNikolaev1/exam-creator-online">
+              My Course Projects
             </a>
           </div>
-          <button className="floating-btn">Get in Touch</button>
+          <a
+            href="https://www.linkedin.com/in/nnikolaev-dev/"
+            className="floating-btn"
+          >
+            Get in Touch
+          </a>
         </footer>
       </main>
     </FacilityProvider>

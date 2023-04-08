@@ -106,7 +106,6 @@ const QuestionCreate = () => {
               (e) => e !== "" && !e.startsWith(" ")
             ) !== "undefined"
           }
-          fullWidth
           onClick={handleAddOnClick}
         >
           Create

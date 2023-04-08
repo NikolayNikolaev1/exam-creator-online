@@ -23,7 +23,7 @@ const ExamEdit = () => {
 
   useEffect(() => {
     setExam(facility.exams.find((e) => e.id === +examId));
-  }, [examId]);
+  }, [facility, examId]);
 
   return (
     <div className="form-wrapper">

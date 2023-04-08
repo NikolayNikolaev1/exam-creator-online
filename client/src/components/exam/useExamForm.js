@@ -177,12 +177,6 @@ const useExamForm = (exam) => {
     });
   }, [exam]);
 
-  useEffect(() => {
-    if (auth.role !== "Lecturer") {
-      navigate("/");
-    }
-  }, [auth]);
-
   return {
     name,
     handleNameChange,

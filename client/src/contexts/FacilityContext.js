@@ -1,18 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getFacility } from "../services/facilityService";
 import { useAuthContext } from "./AuthContext";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export const FacilityContext = createContext();
 
 export const FacilityProvider = ({ children }) => {
   const { auth } = useAuthContext();
-  const [facility, setFacility] = useState({});
+  const [facility, setFacility] = useLocalStorage("facility", {});
+  const [facilityOwnerId, setFacilityOwnerId] = useState();
 
   const fetchFacilityData = async () => {
-    await getFacility(auth.facilityId).then((response) =>
+    await getFacility(auth.facilityId).then((facilityData) => {
       setFacility({
-        ...response,
-        exams: response.exams.filter((e) => {
+        ...facilityData,
+        exams: facilityData.exams.filter((e) => {
           switch (auth.role) {
             case "Lecturer":
               return e.lecturerId === auth.id;
@@ -22,8 +24,12 @@ export const FacilityProvider = ({ children }) => {
               return e;
           }
         }),
-      })
-    );
+      });
+
+      setFacilityOwnerId(
+        facilityData.members.find((m) => m.role === "Owner").id
+      );
+    });
   };
 
   useEffect(() => {
@@ -37,7 +43,7 @@ export const FacilityProvider = ({ children }) => {
 
   return (
     <FacilityContext.Provider
-      value={{ facility, setFacility, fetchFacilityData }}
+      value={{ facility, setFacility, facilityOwnerId, fetchFacilityData }}
     >
       {children}
     </FacilityContext.Provider>

@@ -40,7 +40,6 @@ export const editExam = async (id, body) => {
     },
     body: JSON.stringify(body),
   }).then((response) => {
-    console.log({ response });
     if (!response.ok) {
       throw { statusCode: response.status };
     }
@@ -72,7 +71,6 @@ export const addStudents = async (id, body) => {
     },
     body: JSON.stringify(body),
   }).then((response) => {
-    console.log({ response });
     if (!response.ok) {
       throw { statusCode: response.status };
     }
@@ -90,7 +88,6 @@ export const removeStudents = async (id, body) => {
     },
     body: JSON.stringify(body),
   }).then((response) => {
-    console.log({ response });
     if (!response.ok) {
       throw { statusCode: response.status };
     }

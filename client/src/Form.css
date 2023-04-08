@@ -39,11 +39,11 @@ body {
 }
 
 .delete-btn {
-    background-color: red;
+    background-color: red !important;
 }
 
 .delete-btn:hover {
-    background-color: #001F61;
+    background-color: #001F61 !important;
 }
 
 .error-msg {
@@ -52,6 +52,13 @@ body {
     align-items: center;
     color: red;
 
+}
+
+.success-msg {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    color: green;
 }
 
 .form-p-subtitle {

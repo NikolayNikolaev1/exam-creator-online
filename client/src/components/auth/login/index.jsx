@@ -33,7 +33,7 @@ const Login = () => {
         onChange={handlePasswordChange}
       />
 
-      {error !== "" && <h5>{error}</h5>}
+      {error !== "" && <h5 className="error-msg">{error}</h5>}
 
       <input
         type="button"

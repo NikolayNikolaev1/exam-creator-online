@@ -1,5 +1,4 @@
 import { FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
-import "../Auth.css";
 import useRegister from "./useRegister";
 
 const Register = () => {
@@ -19,24 +18,22 @@ const Register = () => {
     successMeessage,
   } = useRegister();
   return (
-    <div className="get-started" id="login-screen">
-      <p className="get-started-title">
-        Exam <span className="login-p-subtitle">Online</span>
+    <div className="form-wrapper">
+      <p className="form-title">
+        Exam <span className="form-p-subtitle">Online</span>
       </p>
       <input
         type="text"
         name="email"
-        id="email"
         placeholder="Email"
-        className="login-form"
+        className="form-input legacy"
         value={email}
         onChange={handleEmailChange}
       />
       <input
         type="password"
         name="password"
-        id="password"
-        className="login-form"
+        className="form-input legacy"
         placeholder="Pasword"
         value={password}
         onChange={handlePasswordChange}
@@ -44,8 +41,7 @@ const Register = () => {
       <input
         type="text"
         name="first-name"
-        id="first-name"
-        className="login-form"
+        className="form-input legacy"
         placeholder="First Name"
         value={firstName}
         onChange={handleFirstNameChange}
@@ -53,8 +49,7 @@ const Register = () => {
       <input
         type="text"
         name="last-name"
-        id="last-name"
-        className="login-form"
+        className="form-input legacy"
         placeholder="Last Name"
         value={lastName}
         onChange={handleLastNameChange}
@@ -74,12 +69,14 @@ const Register = () => {
         />
         <FormControlLabel value="student" control={<Radio />} label="Student" />
       </RadioGroup>
-      {error !== "" && <h5>{error}</h5>}
-      {successMeessage !== "" && <h4 style={{ color: "green" }}></h4>}
+      {error !== "" && <h5 className="error-msg">{error}</h5>}
+      {successMeessage !== "" && (
+        <h5 className="success-msg">{successMeessage}</h5>
+      )}
       <input
         type="button"
         value="Register User"
-        className="login-btn"
+        className="form-btn"
         onClick={handleRegisterOnClick}
       />
     </div>

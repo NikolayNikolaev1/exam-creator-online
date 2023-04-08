@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuthContext } from "../../../contexts/AuthContext";
 import { register } from "../../../services/authService";
 import useAuth from "../useAuth";
+import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const useRegister = () => {
   const { auth } = useAuthContext();
   const { email, handleEmailChange, password, handlePasswordChange } =
     useAuth();
+  const { setFacility } = useFacilityContext();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState("lecturer");
   const [error, setError] = useState("");
   const [successMeessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
     event.preventDefault();
@@ -37,6 +37,9 @@ const useRegister = () => {
   const handleRegisterOnClick = (event) => {
     event.preventDefault();
 
+    setError("");
+    setSuccessMessage("");
+
     if ([email, password, firstName, lastName].includes("")) {
       setError("All fields are requried.");
       return;
@@ -51,26 +54,27 @@ const useRegister = () => {
       facilityId: auth.facilityId,
       creatorId: auth.id,
     })
-      .then(() => {
+      .then((userData) => {
         setError("");
         setSuccessMessage(
-          `Successfully create a ${role} account with email: ${email}.`
+          `Successfully created a ${role} account with email: ${email}.`
         );
+        setFacility((oldFacility) => ({
+          ...oldFacility,
+          members: [...oldFacility.members, userData],
+        }));
       })
       .catch((error) => {
         switch (error.statusCode) {
           case 400:
             setError(`User with email '${email}' already exists.`);
             break;
+          default:
+            setError("Server error.");
+            break;
         }
       });
   };
-
-  useEffect(() => {
-    if (auth.role !== "Owner") {
-      navigate("/");
-    }
-  }, [auth]);
 
   return {
     email,

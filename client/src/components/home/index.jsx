@@ -1,5 +1,5 @@
-import { Fragment, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
 import { ButtonGroup, List, ListItem, ToggleButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -27,11 +27,6 @@ const Home = () => {
   const { name, description, exams, members } = facility;
   const { auth } = useAuthContext();
   const { collectionType, handleCollectionChange, collection } = useHome();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (typeof auth.id === "undefined") navigate("/login");
-  }, [auth]);
 
   return (
     <Fragment>
@@ -84,8 +79,11 @@ const Home = () => {
       )}
 
       <List>
-        {collectionType === "exam"
-          ? exams?.map((e) => (
+        {collectionType === "exam" ? (
+          exams?.length === 0 ? (
+            <h1>There are no exams currently in this facility.</h1>
+          ) : (
+            exams?.map((e) => (
               <ListItem key={e.id}>
                 <CustomListItem
                   resource={"Exam"}
@@ -104,16 +102,21 @@ const Home = () => {
                 />
               </ListItem>
             ))
-          : collection?.map((c) => (
-              <ListItem key={c.id}>
-                <CustomListItem
-                  resource={collectionType}
-                  header={`${c.firstName} ${c.lastName}`}
-                  contentHeader="Email: "
-                  contentText={c.email}
-                />
-              </ListItem>
-            ))}
+          )
+        ) : collection?.length === 0 ? (
+          <h1>{`There are no ${collectionType}s currently in this facility.`}</h1>
+        ) : (
+          collection?.map((c) => (
+            <ListItem key={c.id}>
+              <CustomListItem
+                resource={collectionType}
+                header={`${c.firstName} ${c.lastName}`}
+                contentHeader="Email: "
+                contentText={c.email}
+              />
+            </ListItem>
+          ))
+        )}
       </List>
     </Fragment>
   );

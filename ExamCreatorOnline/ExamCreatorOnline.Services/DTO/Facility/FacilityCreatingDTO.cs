@@ -13,6 +13,13 @@
         [Required]
         public string Password { get; set; }
 
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
         [Required]
         public int AdminId { get; set; }
     }

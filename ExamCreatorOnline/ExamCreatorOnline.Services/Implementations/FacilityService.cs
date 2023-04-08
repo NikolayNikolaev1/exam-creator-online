@@ -22,7 +22,8 @@
         {
             Facility facility = new Facility
             {
-                Name = facilityDTO.Name
+                Name = facilityDTO.Name,
+                Description = facilityDTO.Description
             };
 
             await this.dbContext.AddAsync(facility);
@@ -32,6 +33,8 @@
             {
                 Email = facilityDTO.Email,
                 Password = facilityDTO.Password,
+                FirstName = facilityDTO.FirstName,
+                LastName = facilityDTO.LastName,
                 FacilityId = facility.Id,
                 Role = Role.Owner
             };

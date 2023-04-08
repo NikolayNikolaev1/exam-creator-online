@@ -12,7 +12,6 @@ export const createFacilityOwner = async (body) => {
     if (!response.ok) {
       throw { statusCode: response.status };
     }
-    return response.json();
   });
 };
 
@@ -43,5 +42,7 @@ export const editFacility = async (id, body) => {
     if (!response.ok) {
       throw { statusCode: response.status };
     }
+
+    return response.json();
   });
 };

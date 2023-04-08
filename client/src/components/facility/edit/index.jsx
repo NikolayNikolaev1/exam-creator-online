@@ -8,6 +8,7 @@ const FacilityEdit = () => {
     description,
     handleDescriptionChange,
     errors,
+    successMessage,
     handleEditOnClick,
   } = useFacilityEdit();
 
@@ -41,13 +42,17 @@ const FacilityEdit = () => {
         onChange={handleDescriptionChange}
       />
 
+      {successMessage !== "" && (
+        <h5 className="success-msg">{successMessage}</h5>
+      )}
+
       <Button
         className="form-btn"
         variant="contained"
         disabled={Object.values(errors).filter((e) => e !== "").length > 0}
         onClick={handleEditOnClick}
       >
-        Edit Exam
+        Save Changes
       </Button>
     </div>
   );

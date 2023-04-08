@@ -108,7 +108,12 @@ const QuestionEdit = () => {
 
         <Button
           className="form-btn"
-          disabled={Object.values(errors).filter((e) => e !== "").length > 0}
+          variant="contained"
+          disabled={
+            typeof Object.values(errors).find(
+              (e) => e !== "" && !e.startsWith(" ")
+            ) !== "undefined"
+          }
           onClick={handleEditOnClick}
         >
           Save changes

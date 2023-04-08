@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../../contexts/AuthContext";
 import { editFacility } from "../../../services/facilityService";
 import { useFacilityContext } from "../../../contexts/FacilityContext";
@@ -7,14 +7,14 @@ import { useFacilityContext } from "../../../contexts/FacilityContext";
 const useFacilityEdit = () => {
   const { facilityId } = useParams();
   const { auth } = useAuthContext();
-  const { facility } = useFacilityContext();
+  const { facility, setFacility } = useFacilityContext();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({
     name: "",
     description: "",
   });
-  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleNameChange = (event) => {
     event.preventDefault();
@@ -43,29 +43,30 @@ const useFacilityEdit = () => {
   const handleEditOnClick = async (event) => {
     event.preventDefault();
 
+    setErrors({
+      name: "",
+      description: "",
+    });
+    setSuccessMessage("");
+
     await editFacility(facilityId, {
       name,
       description,
       ownerId: auth.id,
-    }).then(() => {
-      navigator(`/`);
+    }).then((facilityData) => {
+      setSuccessMessage("Successfully edited facility");
+      setFacility((oldFacility) => ({
+        ...oldFacility,
+        name: facilityData.name,
+        description: facilityData.description,
+      }));
     });
   };
 
   useEffect(() => {
-    if (typeof auth.id === "undefined") {
-      navigate("/login");
-      return;
-    }
-
-    if (auth.id !== facility.members.find((m) => m.role === "Owner").id) {
-      navigate("/");
-      return;
-    }
-
     setName(facility.name);
     setDescription(facility.description);
-  }, [auth, facilityId]);
+  }, [facility]);
 
   return {
     name,
@@ -73,6 +74,7 @@ const useFacilityEdit = () => {
     description,
     handleDescriptionChange,
     errors,
+    successMessage,
     handleEditOnClick,
   };
 };

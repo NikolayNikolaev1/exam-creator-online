@@ -31,6 +31,7 @@ const ExamDetails = () => {
     handleSelectedStudentsOnChange,
     handleQuestionDeleteOnClick,
     handleExamDeleteOnClick,
+    errorMessage,
   } = useExamDetails(examId);
 
   return (
@@ -74,6 +75,8 @@ const ExamDetails = () => {
             </Grid>
           </Fragment>
         )}
+
+        {errorMessage !== "" && <h2 className="error-msg">{errorMessage}</h2>}
 
         <Grid item xs={12}>
           <h1>{exam?.name}</h1>
