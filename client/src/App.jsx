@@ -17,6 +17,7 @@ import Home from "./components/home";
 import ProfileEdit from "./components/profile/edit";
 import RouteGuard from "./components/common/RouteGuard";
 import NotFound from "./components/not-found";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 const App = () => (
   <AuthProvider>
@@ -24,114 +25,116 @@ const App = () => (
       <header className="App-header">
         <Navbar />
       </header>
-      <main className="App">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <RouteGuard>
-                <Home />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <RouteGuard role="Guest">
-                <Login />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <RouteGuard role="Owner">
-                <Register />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/facility/create"
-            element={
-              <RouteGuard role="Admin">
-                <FacilityOwner />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/facility/:facilityId/edit"
-            element={
-              <RouteGuard role="Owner" resource="Facility">
-                <FacilityEdit />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/profile/edit"
-            element={
-              <RouteGuard>
-                <ProfileEdit />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/exam/create"
-            element={
-              <RouteGuard role="Lecturer">
-                <ExamCreate />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/exam/:examId"
-            element={
-              <RouteGuard resource="Exam">
-                <ExamDetails />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/exam/:examId/edit"
-            element={
-              <RouteGuard role="Lecturer" resource="Exam">
-                <ExamEdit />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/exam/:examId/question/create"
-            element={
-              <RouteGuard role="Lecturer" resource="Exam">
-                <QuestionCreate />
-              </RouteGuard>
-            }
-          />
-          <Route
-            path="/exam/:examId/question/:questionId/edit"
-            element={
-              <RouteGuard role="Lecturer" resource="Question">
-                <QuestionEdit />
-              </RouteGuard>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+      <ErrorBoundary>
+        <main className="App">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <RouteGuard>
+                  <Home />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <RouteGuard role="Guest">
+                  <Login />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <RouteGuard role="Owner">
+                  <Register />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/facility/create"
+              element={
+                <RouteGuard role="Admin">
+                  <FacilityOwner />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/facility/:facilityId/edit"
+              element={
+                <RouteGuard role="Owner" resource="Facility">
+                  <FacilityEdit />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/profile/edit"
+              element={
+                <RouteGuard>
+                  <ProfileEdit />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/exam/create"
+              element={
+                <RouteGuard role="Lecturer">
+                  <ExamCreate />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/exam/:examId"
+              element={
+                <RouteGuard resource="Exam">
+                  <ExamDetails />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/exam/:examId/edit"
+              element={
+                <RouteGuard role="Lecturer" resource="Exam">
+                  <ExamEdit />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/exam/:examId/question/create"
+              element={
+                <RouteGuard role="Lecturer" resource="Exam">
+                  <QuestionCreate />
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/exam/:examId/question/:questionId/edit"
+              element={
+                <RouteGuard role="Lecturer" resource="Question">
+                  <QuestionEdit />
+                </RouteGuard>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
 
-        <footer>
-          <div className="floating-text">
-            Part of{" "}
-            <a href="https://github.com/NikolayNikolaev1/exam-creator-online">
-              My Course Projects
+          <footer>
+            <div className="floating-text">
+              Part of{" "}
+              <a href="https://github.com/NikolayNikolaev1/exam-creator-online">
+                My Course Projects
+              </a>
+            </div>
+            <a
+              href="https://www.linkedin.com/in/nnikolaev-dev/"
+              className="floating-btn"
+            >
+              Get in Touch
             </a>
-          </div>
-          <a
-            href="https://www.linkedin.com/in/nnikolaev-dev/"
-            className="floating-btn"
-          >
-            Get in Touch
-          </a>
-        </footer>
-      </main>
+          </footer>
+        </main>
+      </ErrorBoundary>
     </FacilityProvider>
   </AuthProvider>
 );

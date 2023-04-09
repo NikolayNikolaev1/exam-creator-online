@@ -110,8 +110,20 @@ const ExamDetails = () => {
               ))}
             </List>
 
-            <Button onClick={handleAddStudentOnClick}>Add Student</Button>
-            <Button onClick={handleRemoveStudentOnClick}>Remove Student</Button>
+            <Button
+              sx={{ margin: "5px" }}
+              variant="contained"
+              onClick={handleAddStudentOnClick}
+            >
+              Add Student
+            </Button>
+            <Button
+              sx={{ margin: "5px" }}
+              variant="contained"
+              onClick={handleRemoveStudentOnClick}
+            >
+              Remove Student
+            </Button>
 
             {showAddStudents && (
               <Autocomplete
@@ -152,7 +164,13 @@ const ExamDetails = () => {
             )}
 
             {(showAddStudents || showRemoveStudents) && (
-              <Button onClick={handleStudentsSaveOnClick}>Save</Button>
+              <Button
+                sx={{ margin: "5px" }}
+                variant="contained"
+                onClick={handleStudentsSaveOnClick}
+              >
+                Save
+              </Button>
             )}
           </Fragment>
         )}

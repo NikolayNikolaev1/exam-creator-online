@@ -12,7 +12,6 @@ const useHome = () => {
   };
 
   useEffect(() => {
-    
     if (collectionType !== "exam") {
       setCollection(
         facility.members.filter((m) => m.role.toLowerCase() === collectionType)
