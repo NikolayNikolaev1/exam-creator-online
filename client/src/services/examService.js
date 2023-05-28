@@ -95,3 +95,20 @@ export const removeStudents = async (id, body) => {
     return response.json();
   });
 };
+
+export const finishExam = async (body) => {
+  return await fetch(`${baseUrl}/Finish`, {
+    method: "POST",
+    mode: "cors", // no-cors, *cors, same-origin
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).then((response) => {
+    if (!response.ok) {
+      throw { statusCode: response.status };
+    }
+
+    return response.json();
+  });
+};

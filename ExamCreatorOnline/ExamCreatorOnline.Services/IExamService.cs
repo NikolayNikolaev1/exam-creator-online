@@ -20,6 +20,8 @@
 
         Task<ExamDTO> FindByIdAsync(int id);
 
+        Task FinishAsync(MarkDTO markDTO, int studentId);
+
         Task<IEnumerable<int>> RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
 
         Task UpdateAsync(int id, ExamUpdatingDTO examDTO);

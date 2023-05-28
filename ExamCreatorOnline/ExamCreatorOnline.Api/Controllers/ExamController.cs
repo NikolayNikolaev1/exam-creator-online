@@ -44,6 +44,29 @@
             return Ok(await this.examService.FindByIdAsync(examId));
         }
 
+        [HttpPost("~/api/Finish")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Finish([FromBody] ExamFinishingDTO examDTO)
+        {
+            if (examDTO == null)
+            {
+                return BadRequest(examDTO);
+            }
+
+            if (!await base.IsUserAuthorizedAsync(examDTO.StudentId, Role.Student))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
+            foreach (var mark in examDTO.Marks)
+            {
+                await this.examService.FinishAsync(mark, examDTO.StudentId);
+            }
+
+            return Ok();
+        }
+
 
         [HttpGet("{id:int}", Name = "GetExam")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExamDTO))]

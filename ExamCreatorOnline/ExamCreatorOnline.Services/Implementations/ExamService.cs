@@ -88,6 +88,40 @@
             .ProjectTo<ExamDTO>(this.mapper.ConfigurationProvider)
             .FirstAsync(e => e.Id == id);
 
+        public async Task FinishAsync(MarkDTO markDTO, int studentId)
+        {
+            Mark mark = this.dbContext
+                .Marks
+                .Any(m =>
+                    m.QuestionId == markDTO.QuestionId &&
+                    m.AnswearId == markDTO.AnswearId) ? this.dbContext.Marks.First(m =>
+                    m.QuestionId == markDTO.QuestionId &&
+                    m.AnswearId == markDTO.AnswearId) : new Mark
+            {
+                QuestionId = markDTO.QuestionId,
+                AnswearId = markDTO.AnswearId
+            };
+
+            if (!await this.dbContext
+                .Marks
+                .AnyAsync(m =>
+                    m.QuestionId == mark.QuestionId &&
+                    m.AnswearId == mark.AnswearId))
+            {
+                await this.dbContext.AddAsync(mark);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            StudentMark studentMark = new StudentMark
+            {
+                StudentId = studentId,
+                MarkId = mark.Id,
+            };
+
+            await this.dbContext.AddAsync(studentMark);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<int>> RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)
         {
             foreach (StudentExam se in this.dbContext.StudentsExams)

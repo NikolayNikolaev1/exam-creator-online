@@ -76,6 +76,18 @@ const ExamDetails = () => {
           </Fragment>
         )}
 
+        {auth.role === "Student" && (
+          <Grid item xs={4}>
+            <Button
+              variant="contained"
+              component={Link}
+              to={`/exam/take/${examId}`}
+            >
+              Start Exam
+            </Button>
+          </Grid>
+        )}
+
         {errorMessage !== "" && <h2 className="error-msg">{errorMessage}</h2>}
 
         <Grid item xs={12}>

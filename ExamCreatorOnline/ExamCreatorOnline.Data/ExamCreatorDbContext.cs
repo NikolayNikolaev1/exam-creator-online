@@ -21,6 +21,8 @@
 
         public DbSet<StudentExam> StudentsExams { get; set; }
 
+        public DbSet<Mark> Marks { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(@"Server=HP-ELITEBOOK\SQLEXPRESS;Database=ExamCreatorOnline;Integrated Security=True;TrustServerCertificate=True;");

@@ -18,6 +18,7 @@ import ProfileEdit from "./components/profile/edit";
 import RouteGuard from "./components/common/RouteGuard";
 import NotFound from "./components/not-found";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import ExamTake from "./components/exam/take";
 
 const App = () => (
   <AuthProvider>
@@ -92,6 +93,7 @@ const App = () => (
                 </RouteGuard>
               }
             />
+            <Route path="/exam/take/:examId" element={<ExamTake />} />
             <Route
               path="/exam/:examId/edit"
               element={
