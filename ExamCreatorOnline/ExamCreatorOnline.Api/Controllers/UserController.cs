@@ -86,6 +86,12 @@
             return Ok(await this.userService.FindByIdAsync(id));
         }
 
+        //[HttpGet("~/api/Student/{id:int}/Mark")]
+        //public async Task<ActionResult> GetMark(int id)
+        //{
+
+        //}
+
 
         [HttpPut()]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))]

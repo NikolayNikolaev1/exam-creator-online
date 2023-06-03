@@ -17,6 +17,7 @@ const ExamTake = () => {
   const exam = facility.exams.find((e) => e.id === +examId);
   //   const currentQuestion = exam.questions[currentQuestionIndex];
   const {
+    score,
     questionAnswears,
     handleQuestionAnswearOnChange,
     currentQuestionIndex,
@@ -53,6 +54,7 @@ const ExamTake = () => {
         >
           Finish Exam
         </Button>
+        {score !== null && <h1>Points: {score}</h1>}
       </Stack>
       <h1>{exam.questions[currentQuestionIndex].text}</h1>
       <FormControl>

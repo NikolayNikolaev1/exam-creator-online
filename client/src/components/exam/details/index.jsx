@@ -31,27 +31,34 @@ const ExamDetails = () => {
     handleSelectedStudentsOnChange,
     handleQuestionDeleteOnClick,
     handleExamDeleteOnClick,
+    handleExamOpenOnClick,
     errorMessage,
   } = useExamDetails(examId);
+
+  const examScoreIndex = facility.exams
+    .find((e) => e.id === +examId)
+    .studentIds.indexOf(auth.id);
 
   return (
     <Container maxWidth="sm" sx={{ mb: 4 }}>
       <Grid container spacing={2} justifyContent="center">
         {auth.id === exam.lecturerId && (
           <Fragment>
-            <Grid item xs={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                component={Link}
-                to={`/exam/${examId}/question/create`}
-              >
-                Add Questions
-              </Button>
-            </Grid>
+            {!facility.exams.find((e) => e.id === +examId).isOpen && (
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  component={Link}
+                  to={`/exam/${examId}/question/create`}
+                >
+                  Add Questions
+                </Button>
+              </Grid>
+            )}
 
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Button
                 variant="contained"
                 color="warning"
@@ -63,29 +70,55 @@ const ExamDetails = () => {
               </Button>
             </Grid>
 
-            <Grid item xs={4}>
-              <Button
-                variant="contained"
-                color="error"
-                fullWidth
-                onClick={handleExamDeleteOnClick}
-              >
-                Delete
-              </Button>
-            </Grid>
+            {!facility.exams.find((e) => e.id === +examId).isOpen && (
+              <Fragment>
+                <Grid item xs={3}>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                    onClick={handleExamDeleteOnClick}
+                  >
+                    Delete
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={handleExamOpenOnClick}
+                  >
+                    Open
+                  </Button>
+                </Grid>
+              </Fragment>
+            )}
           </Fragment>
         )}
 
-        {auth.role === "Student" && (
-          <Grid item xs={4}>
-            <Button
-              variant="contained"
-              component={Link}
-              to={`/exam/take/${examId}`}
-            >
-              Start Exam
-            </Button>
-          </Grid>
+        {auth.role === "Student" ? (
+          facility.exams.find((e) => e.id === +examId).scores[
+            examScoreIndex
+          ] === null ? (
+            <Fragment>
+              {facility.exams.find((e) => e.id === +examId).isOpen && (
+                <Grid item xs={4}>
+                  <Button
+                    variant="contained"
+                    component={Link}
+                    to={`/exam/take/${examId}`}
+                  >
+                    Start Exam
+                  </Button>
+                </Grid>
+              )}
+            </Fragment>
+          ) : (
+            <h1>Exam already taken</h1>
+          )
+        ) : (
+          <Fragment />
         )}
 
         {errorMessage !== "" && <h2 className="error-msg">{errorMessage}</h2>}
@@ -122,67 +155,70 @@ const ExamDetails = () => {
               ))}
             </List>
 
-            <Button
-              sx={{ margin: "5px" }}
-              variant="contained"
-              onClick={handleAddStudentOnClick}
-            >
-              Add Student
-            </Button>
-            <Button
-              sx={{ margin: "5px" }}
-              variant="contained"
-              onClick={handleRemoveStudentOnClick}
-            >
-              Remove Student
-            </Button>
-
-            {showAddStudents && (
-              <Autocomplete
-                multiple
-                value={selectedStudents}
-                onChange={(event, newValue) =>
-                  handleSelectedStudentsOnChange(event, newValue)
-                }
-                getOptionLabel={(option) => option.email}
-                id="controllable-states-demo"
-                options={members?.filter(
-                  (m) => !exam.studentIds.includes(m.id) && m.role === "Student"
+            {!facility.exams.find((e) => e.id === +examId).isOpen && (
+              <Fragment>
+                <Button
+                  sx={{ margin: "5px" }}
+                  variant="contained"
+                  onClick={handleAddStudentOnClick}
+                >
+                  Add Student
+                </Button>
+                <Button
+                  sx={{ margin: "5px" }}
+                  variant="contained"
+                  onClick={handleRemoveStudentOnClick}
+                >
+                  Remove Student
+                </Button>
+                {showAddStudents && (
+                  <Autocomplete
+                    multiple
+                    value={selectedStudents}
+                    onChange={(event, newValue) =>
+                      handleSelectedStudentsOnChange(event, newValue)
+                    }
+                    getOptionLabel={(option) => option.email}
+                    id="controllable-states-demo"
+                    options={members?.filter(
+                      (m) =>
+                        !exam.studentIds.includes(m.id) && m.role === "Student"
+                    )}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Students" />
+                    )}
+                  />
                 )}
-                sx={{ width: 300 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Students" />
+                {showRemoveStudents && (
+                  <Autocomplete
+                    multiple
+                    value={selectedStudents}
+                    onChange={(event, newValue) =>
+                      handleSelectedStudentsOnChange(event, newValue)
+                    }
+                    getOptionLabel={(option) => option.email}
+                    id="controllable-states-demo"
+                    options={members?.filter(
+                      (m) =>
+                        exam.studentIds.includes(m.id) && m.role === "Student"
+                    )}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Students" />
+                    )}
+                  />
                 )}
-              />
-            )}
-
-            {showRemoveStudents && (
-              <Autocomplete
-                multiple
-                value={selectedStudents}
-                onChange={(event, newValue) =>
-                  handleSelectedStudentsOnChange(event, newValue)
-                }
-                getOptionLabel={(option) => option.email}
-                id="controllable-states-demo"
-                options={members?.filter(
-                  (m) => exam.studentIds.includes(m.id) && m.role === "Student"
+                {(showAddStudents || showRemoveStudents) && (
+                  <Button
+                    sx={{ margin: "5px" }}
+                    variant="contained"
+                    onClick={handleStudentsSaveOnClick}
+                  >
+                    Save
+                  </Button>
                 )}
-                sx={{ width: 300 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Students" />
-                )}
-              />
-            )}
-
-            {(showAddStudents || showRemoveStudents) && (
-              <Button
-                sx={{ margin: "5px" }}
-                variant="contained"
-                onClick={handleStudentsSaveOnClick}
-              >
-                Save
-              </Button>
+              </Fragment>
             )}
           </Fragment>
         )}
@@ -193,13 +229,14 @@ const ExamDetails = () => {
               ?.filter(
                 (m) => exam.studentIds.includes(m.id) && m.role === "Student"
               )
-              ?.map((m) => (
+              ?.map((m, i) => (
                 <ListItem key={m.id}>
                   <CustomListItem
                     resource={"Student"}
                     header={`${m.firstName} ${m.lastName}`}
                     contentHeader="Email: "
                     contentText={m.email}
+                    score={exam.scores[i]}
                   />
                 </ListItem>
               ))}

@@ -1,6 +1,7 @@
 ﻿namespace ExamCreatorOnline.Api.Controllers
 {
     using Data.Models;
+    using Microsoft.AspNetCore.Http.HttpResults;
     using Microsoft.AspNetCore.Mvc;
     using Services;
     using Services.DTO.Exams;
@@ -18,7 +19,7 @@
         }
 
         [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExamDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Create([FromBody] ExamCreatingDTO examDTO)
@@ -64,7 +65,7 @@
                 await this.examService.FinishAsync(mark, examDTO.StudentId);
             }
 
-            return Ok();
+            return Ok(await this.examService.CalculateScoreAsync(examDTO.ExamId, examDTO.StudentId));
         }
 
 
@@ -149,6 +150,41 @@
 
             return Ok(await this.examService.AddStudentsAsync(id, dto.StudentIds));
         }
+
+        public class ExamLecturerDTO
+        {
+            public int LecturerId { get; set; }
+        }
+
+        [HttpPut("~/api/Exam/{id:int}/Open")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> ExamOpen(int id, [FromBody] ExamLecturerDTO dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest(dto);
+            }
+
+
+            if (!await this.examService.ExistsIdAsync(id))
+            {
+                return NotFound(id);
+            }
+
+
+            if (!await base.IsUserAuthorizedAsync(dto.LecturerId, Role.Lecturer, id))
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+
+            await this.examService.OpenSync(id);
+
+            return Ok();
+        }
+
 
         [HttpPut("~/api/Exam/{id:int}/StudentRemove")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<int>))]

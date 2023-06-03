@@ -14,6 +14,8 @@
 
         public string Description { get; set; }
 
+        public bool IsOpen { get; set; }
+
         public int AveragePoints { get; set; }
 
         public int GoodPoints { get; set; }
@@ -28,11 +30,14 @@
 
         public IEnumerable<int> StudentIds { get; set; }
 
+        public IEnumerable<int?> Scores { get; set; }
+
         public IEnumerable<QuestionDTO> Questions { get; set; }
 
         public void ConfigureMapping(Profile mapper)
             => mapper
             .CreateMap<Exam, ExamDTO>()
-            .ForMember(e => e.StudentIds, cfg => cfg.MapFrom(e => e.Students.Select(s => s.Student.Id)));
+            .ForMember(e => e.StudentIds, cfg => cfg.MapFrom(e => e.Students.Select(s => s.Student.Id)))
+            .ForMember(e => e.Scores, cfg => cfg.MapFrom(e => e.Students.Select(s => s.Score)));
     }
 }

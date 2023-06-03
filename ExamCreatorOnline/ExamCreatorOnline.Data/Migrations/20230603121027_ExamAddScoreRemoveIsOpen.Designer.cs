@@ -4,6 +4,7 @@ using ExamCreatorOnline.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamCreatorOnline.Data.Migrations
 {
     [DbContext(typeof(ExamCreatorDbContext))]
-    partial class ExamCreatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230603121027_ExamAddScoreRemoveIsOpen")]
+    partial class ExamAddScoreRemoveIsOpen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +72,6 @@ namespace ExamCreatorOnline.Data.Migrations
 
                     b.Property<int>("GoodPoints")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsOpen")
-                        .HasColumnType("bit");
 
                     b.Property<int>("LecturerId")
                         .HasColumnType("int");

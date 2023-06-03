@@ -45,6 +45,26 @@
             return exam.Students.Select(s => s.StudentId).ToList();
         }
 
+        public async Task<int> CalculateScoreAsync(int examId, int studentId)
+        {
+            StudentExam studentExam = await this.dbContext
+                .StudentsExams
+                .FirstAsync(se => se.ExamId == examId && studentId == se.StudentId);
+
+            int score = this.dbContext
+                .StudentsMarks
+                .Where(sm => sm.StudentId == studentId)
+                .Select(sm => sm.Mark.Answear.IsCorrect ? sm.Mark.Question.Points : 0)
+                .ToList()
+                .Sum();
+
+            studentExam.Score = score;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return score;
+        }
+
         public async Task<int> CreateAsync(ExamCreatingDTO examDTO)
         {
             Exam exam = new Exam
@@ -120,6 +140,13 @@
 
             await this.dbContext.AddAsync(studentMark);
             await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task OpenSync(int id)
+        {
+            var exam = await this.dbContext.Exams.FirstAsync(e => e.Id == id);
+            exam.IsOpen = true;
+            this.dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<int>> RemoveStudentsAsync(int examId, IEnumerable<int> studentIds)

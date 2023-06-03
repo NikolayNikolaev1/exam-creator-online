@@ -5,6 +5,8 @@
         public MarkDTO[] Marks { get; set; }
 
         public int StudentId { get; set; }
+
+        public int ExamId { get; set; }
     }
 
     public class MarkDTO

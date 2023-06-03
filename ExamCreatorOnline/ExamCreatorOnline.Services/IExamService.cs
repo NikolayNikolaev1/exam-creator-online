@@ -12,6 +12,8 @@
 
         Task<int> CreateAsync(ExamCreatingDTO examDTO);
 
+        Task<int> CalculateScoreAsync(int examId, int studentId);
+
         Task DeleteAsync(int id);
 
         Task<bool> ExistsIdAsync(int id);
@@ -25,5 +27,7 @@
         Task<IEnumerable<int>> RemoveStudentsAsync(int examId, IEnumerable<int> studentIds);
 
         Task UpdateAsync(int id, ExamUpdatingDTO examDTO);
+
+        Task OpenSync(int id);
     }
 }

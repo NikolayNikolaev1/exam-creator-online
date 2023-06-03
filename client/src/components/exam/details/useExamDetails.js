@@ -6,6 +6,7 @@ import {
   addStudents,
   deleteExam,
   removeStudents,
+  openExam,
 } from "../../../services/examService";
 import { deleteQuestion } from "../../../services/questionService";
 
@@ -98,6 +99,19 @@ const useExamDetails = (examId) => {
       );
   };
 
+  const handleExamOpenOnClick = async (event) => {
+    event.preventDefault();
+
+    await openExam(examId, { lecturerId: auth.id }).then(() => {
+      setFacility((oldFacility) => ({
+        ...oldFacility,
+        exams: oldFacility.exams.map((e) =>
+          e.id === +examId ? { ...e, isOpen: true } : e
+        ),
+      }));
+    });
+  };
+
   useEffect(() => {
     if (auth.facilityId !== facility.id) navigate("/");
     setExam(facility.exams.find((e) => e.id == examId));
@@ -123,6 +137,7 @@ const useExamDetails = (examId) => {
     handleSelectedStudentsOnChange,
     handleQuestionDeleteOnClick,
     handleExamDeleteOnClick,
+    handleExamOpenOnClick,
     errorMessage,
   };
 };

@@ -4,6 +4,7 @@ using ExamCreatorOnline.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamCreatorOnline.Data.Migrations
 {
     [DbContext(typeof(ExamCreatorDbContext))]
-    partial class ExamCreatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230603142933_AddExamIsOpen")]
+    partial class AddExamIsOpen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

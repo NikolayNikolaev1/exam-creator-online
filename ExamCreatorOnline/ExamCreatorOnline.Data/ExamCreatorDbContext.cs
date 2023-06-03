@@ -21,6 +21,8 @@
 
         public DbSet<StudentExam> StudentsExams { get; set; }
 
+        public DbSet<StudentMark> StudentsMarks { get; set; }
+
         public DbSet<Mark> Marks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)

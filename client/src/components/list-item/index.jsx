@@ -9,6 +9,7 @@ const CustomListItem = ({
   contentText,
   contentList,
   buttons,
+  score,
 }) => {
   return (
     <div className="courses-container">
@@ -22,6 +23,7 @@ const CustomListItem = ({
             <Fragment>
               <h6>{contentHeader}</h6>
               <p>{contentText}</p>
+              {score && (<h1>Score: {score}</h1>)}
             </Fragment>
           ) : (
             <List>

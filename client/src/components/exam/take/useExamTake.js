@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { finishExam } from "../../../services/examService";
 import { useAuthContext } from "../../../contexts/AuthContext";
+import { useFacilityContext } from "../../../contexts/FacilityContext";
 
 const useExamTake = (exam) => {
   const { auth } = useAuthContext();
+  const { fetchFacilityData } = useFacilityContext();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionAnswears, setQuestionAnswears] = useState([
     { answearId: null },
   ]);
+  const [score, setScore] = useState(null);
 
   const handleCurrentQuestionOnChange = (event) => {
     setCurrentQuestionIndex(event.target.value);
@@ -37,6 +40,11 @@ const useExamTake = (exam) => {
     await finishExam({
       marks: questionAnswears,
       studentId: auth.id,
+      examId: exam.id,
+    }).then((data) => {
+      fetchFacilityData();
+
+      setScore(data);
     });
   };
 
@@ -50,6 +58,7 @@ const useExamTake = (exam) => {
   }, [exam]);
 
   return {
+    score,
     questionAnswears,
     handleQuestionAnswearOnChange,
     currentQuestionIndex,
